@@ -1,0 +1,31 @@
+import express from "express";
+import cors from "cors";
+import helmet from "helmet";
+import morgan from "morgan";
+
+import authRoutes from "./routes/auth.routes.js";
+import contactRoute from "./routes/contact.route.js";
+import projectRoutes from "./routes/project.routes.js";
+import "./config/cloudinary.js"; 
+
+const app = express();
+
+app.use(cors());
+app.use(helmet());
+app.use(morgan("dev"));
+
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
+
+app.use("/api/auth", authRoutes);
+app.use("/api/contact", contactRoute);
+app.use("/api/projects", projectRoutes);
+
+app.get("/", (req, res) => {
+  res.status(200).json({
+    success: true,
+    message: "🚀 Kartik AI Backend Running...",
+  });
+});
+
+export default app;
