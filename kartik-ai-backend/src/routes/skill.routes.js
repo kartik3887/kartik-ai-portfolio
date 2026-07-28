@@ -1,18 +1,17 @@
 import express from "express";
 
 import {
-  createProject,
-  getAllProjects,
-  getProjectBySlug,
-  getAdminProjects,
-  updateProject,
-  deleteProject,
-  togglePublish,
-  toggleFeatured,
-} from "../controllers/project.controller.js";
+  createSkill,
+  getAllSkills,
+  getAdminSkills,
+  getSkillById,
+  updateSkill,
+  deleteSkill,
+  togglePublishSkill,
+} from "../controllers/skill.controller.js";
 
-import { authMiddleware } from "../middleware/auth.middleware.js";
-import { adminMiddleware } from "../middleware/admin.middleware.js";
+import {authMiddleware }from "../middleware/auth.middleware.js";
+import {adminMiddleware} from "../middleware/admin.middleware.js";
 import upload from "../middleware/upload.middleware.js";
 
 const router = express.Router();
@@ -27,44 +26,37 @@ router.get(
   "/admin/all",
   authMiddleware,
   adminMiddleware,
-  getAdminProjects
+  getAdminSkills
 );
 
 router.post(
   "/",
   authMiddleware,
   adminMiddleware,
-  upload.single("image"),
-  createProject
+  upload.single("icon"),
+  createSkill
 );
 
 router.put(
   "/:id",
   authMiddleware,
   adminMiddleware,
-  upload.single("image"),
-  updateProject
+  upload.single("icon"),
+  updateSkill
 );
 
 router.delete(
   "/:id",
   authMiddleware,
   adminMiddleware,
-  deleteProject
+  deleteSkill
 );
 
 router.patch(
   "/:id/publish",
   authMiddleware,
   adminMiddleware,
-  togglePublish
-);
-
-router.patch(
-  "/:id/featured",
-  authMiddleware,
-  adminMiddleware,
-  toggleFeatured
+  togglePublishSkill
 );
 
 /*
@@ -73,8 +65,8 @@ Public Routes
 =========================================
 */
 
-router.get("/", getAllProjects);
+router.get("/", getAllSkills);
 
-router.get("/:slug", getProjectBySlug);
+router.get("/:id", getSkillById);
 
 export default router;

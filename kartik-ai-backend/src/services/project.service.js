@@ -1,17 +1,19 @@
 import slugify from "slugify";
 
 import Project from "../models/Project.js";
-
 import ApiError from "../utils/ApiError.js";
 
-import { uploadFile } from "./cloudinary.service.js";
+import {
+  uploadFile,
+  replaceFile,
+  deleteFile,
+} from "./cloudinary.service.js";
 
 /*
 =========================================
 Create Project
 =========================================
 */
-
 export const createProjectService = async (req) => {
   const {
     title,
@@ -25,7 +27,7 @@ export const createProjectService = async (req) => {
   } = req.body;
 
   if (!title || !description) {
-    throw new ApiError(400, "Title and Description are required");
+    throw new ApiError(400, "Title and description are required");
   }
 
   const slug = slugify(title, {
@@ -48,11 +50,15 @@ export const createProjectService = async (req) => {
     image = await uploadFile(req.file, "kartik-ai/projects");
   }
 
+  const parsedTechStack = techStack
+    ? JSON.parse(techStack)
+    : [];
+
   const project = await Project.create({
     title,
     slug,
     description,
-    techStack,
+    techStack: parsedTechStack,
     github,
     liveDemo,
     featured,
@@ -69,7 +75,6 @@ export const createProjectService = async (req) => {
 Get All Public Projects
 =========================================
 */
-
 export const getAllProjectsService = async () => {
   return await Project.find({
     isPublished: true,
@@ -84,7 +89,6 @@ export const getAllProjectsService = async () => {
 Get Project By Slug
 =========================================
 */
-
 export const getProjectBySlugService = async (slug) => {
   const project = await Project.findOne({
     slug,
@@ -103,21 +107,18 @@ export const getProjectBySlugService = async (slug) => {
 Admin Get All Projects
 =========================================
 */
-
 export const getAdminProjectsService = async () => {
   return await Project.find().sort({
+    order: 1,
     createdAt: -1,
   });
 };
-
-import { replaceFile, deleteFile } from "./cloudinary.service.js";
 
 /*
 =========================================
 Update Project
 =========================================
 */
-
 export const updateProjectService = async (req) => {
   const { id } = req.params;
 
@@ -127,39 +128,62 @@ export const updateProjectService = async (req) => {
     throw new ApiError(404, "Project not found");
   }
 
-  const data = { ...req.body };
+  const data = {
+    ...req.body,
+  };
+
+  if (data.techStack) {
+    data.techStack = JSON.parse(data.techStack);
+  }
 
   if (data.title) {
     data.slug = slugify(data.title, {
       lower: true,
       strict: true,
     });
+
+    const existing = await Project.findOne({
+      slug: data.slug,
+      _id: { $ne: id },
+    });
+
+    if (existing) {
+      throw new ApiError(409, "Project already exists");
+    }
   }
 
   if (req.file) {
-    const image = await replaceFile(
+    data.image = await replaceFile(
       project.image?.public_id,
       req.file,
-      "kartik-ai/projects",
+      "kartik-ai/projects"
     );
-
-    data.image = image;
   }
 
-  const updatedProject = await Project.findByIdAndUpdate(id, data, {
-    new: true,
-    runValidators: true,
-  });
+  console.log("BODY:", req.body);
+  console.log("FILE:", req.file);
+  console.log("DATA:", data);
+
+  
+
+  const updatedProject = await Project.findByIdAndUpdate(
+    id,
+    data,
+    {
+      new: true,
+      runValidators: true,
+    }
+  );
 
   return updatedProject;
 };
+
 
 /*
 =========================================
 Delete Project
 =========================================
 */
-
 export const deleteProjectService = async (id) => {
   const project = await Project.findById(id);
 
@@ -181,7 +205,6 @@ export const deleteProjectService = async (id) => {
 Toggle Publish
 =========================================
 */
-
 export const togglePublishService = async (id) => {
   const project = await Project.findById(id);
 
@@ -201,7 +224,6 @@ export const togglePublishService = async (id) => {
 Toggle Featured
 =========================================
 */
-
 export const toggleFeaturedService = async (id) => {
   const project = await Project.findById(id);
 

@@ -26,19 +26,18 @@ export const uploadFile = async (
 export const replaceFile = async (
   oldPublicId,
   file,
-  folder,
-  resourceType = "auto"
+  folder
 ) => {
   if (!file) return null;
 
   if (oldPublicId) {
-    await deleteFromCloudinary(oldPublicId, resourceType);
+    await deleteFromCloudinary(oldPublicId, "image");
   }
 
   const result = await uploadToCloudinary(
     file.path,
     folder,
-    resourceType
+    "auto"
   );
 
   removeLocalFile(file.path);

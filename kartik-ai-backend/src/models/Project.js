@@ -4,8 +4,9 @@ const projectSchema = new mongoose.Schema(
   {
     title: {
       type: String,
-      required: true,
+      required: [true, "Project title is required"],
       trim: true,
+      maxlength: [100, "Title cannot exceed 100 characters"],
     },
 
     slug: {
@@ -18,8 +19,9 @@ const projectSchema = new mongoose.Schema(
 
     description: {
       type: String,
-      required: true,
+      required: [true, "Project description is required"],
       trim: true,
+      maxlength: [3000, "Description is too long"],
     },
 
     image: {
@@ -27,6 +29,7 @@ const projectSchema = new mongoose.Schema(
         type: String,
         default: "",
       },
+
       public_id: {
         type: String,
         default: "",
@@ -43,11 +46,13 @@ const projectSchema = new mongoose.Schema(
     github: {
       type: String,
       default: "",
+      trim: true,
     },
 
     liveDemo: {
       type: String,
       default: "",
+      trim: true,
     },
 
     featured: {
@@ -58,6 +63,7 @@ const projectSchema = new mongoose.Schema(
     order: {
       type: Number,
       default: 0,
+      min: 0,
     },
 
     isPublished: {
@@ -67,6 +73,7 @@ const projectSchema = new mongoose.Schema(
   },
   {
     timestamps: true,
+    versionKey: false,
   }
 );
 
