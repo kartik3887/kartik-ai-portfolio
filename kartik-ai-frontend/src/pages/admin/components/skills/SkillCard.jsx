@@ -1,358 +1,289 @@
-import { useState } from "react";
+import {
+  SquarePen,
+  Trash,
+  Eye,
+  EyeOff,
+  Code2,
+} from "lucide-react";
+
 import { motion } from "framer-motion";
-import { Plus, Code2, Globe, Activity } from "lucide-react";
 
-import SkillList from "../skills/SkillList";
-import SkillModal from "../skills/SkillModal";
-import SkillForm from "../skills/SkillForm";
-
-import { createSkill, updateSkill } from "@/api/skill.api";
-
-const Skills = () => {
-  const [openModal, setOpenModal] = useState(false);
-
-  const [selectedSkill, setSelectedSkill] = useState(null);
-
-  const [skills, setSkills] = useState([]);
-
-  const publishedSkills = skills.filter((skill) => skill.isPublished).length;
-
-  const averageLevel = skills.length
-    ? Math.round(
-        skills.reduce((total, skill) => total + Number(skill.level || 0), 0) /
-          skills.length,
-      )
-    : 0;
-
-  const handleAdd = () => {
-    setSelectedSkill(null);
-
-    setOpenModal(true);
-  };
-
-  const handleEdit = (skill) => {
-    setSelectedSkill(skill);
-
-    setOpenModal(true);
-  };
-
-  const handleClose = () => {
-    setOpenModal(false);
-
-    setSelectedSkill(null);
-  };
-
-  const handleSubmitSkill = async (formData) => {
-    try {
-      let success;
-
-      if (selectedSkill) {
-        success = await updateSkill(selectedSkill._id, formData);
-      } else {
-        success = await createSkill(formData);
-      }
-
-      if (success) {
-        handleClose();
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
+const SkillCard = ({
+  skill,
+  onEdit,
+  onDelete,
+  onPublish,
+}) => {
   return (
-    <div
+    <motion.div
+      initial={{
+        opacity: 0,
+        y: 15,
+      }}
+      animate={{
+        opacity: 1,
+        y: 0,
+      }}
+      whileHover={{
+        y: -3,
+      }}
+      transition={{
+        duration: 0.25,
+      }}
       className="
+      group
       relative
-      space-y-6
       overflow-hidden
-      "
-    >
-      {/* BACKGROUND GLOW */}
-
-      <div
-        className="
-        absolute
-        -top-40
-        -right-40
-        w-96
-        h-96
-        rounded-full
-        bg-blue-500/20
-        blur-[140px]
-        pointer-events-none
-        "
-      />
-
-      <div
-        className="
-        absolute
-        -bottom-40
-        -left-40
-        w-96
-        h-96
-        rounded-full
-        bg-cyan-500/20
-        blur-[140px]
-        pointer-events-none
-        "
-      />
-
-      {/* HEADER */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: -20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        className="
-        relative
-        rounded-3xl
-        border
-        border-white/10
-        bg-white/5
-        backdrop-blur-2xl
-        p-5
-        md:p-6
-        "
-      >
-        <div
-          className="
-          flex
-          flex-col
-          lg:flex-row
-          lg:items-center
-          lg:justify-between
-          gap-6
-          "
-        >
-          <div>
-            <div
-              className="
-              flex
-              items-center
-              gap-3
-              "
-            >
-              <div
-                className="
-                p-3
-                rounded-2xl
-                bg-blue-500/20
-                border
-                border-blue-400/20
-                text-blue-400
-                "
-              >
-                <Code2 size={24} />
-              </div>
-
-              <div>
-                <p
-                  className="
-                  text-xs
-                  tracking-[0.3em]
-                  uppercase
-                  text-blue-400
-                  "
-                >
-                  AI SKILL MANAGEMENT
-                </p>
-
-                <h1
-                  className="
-                  text-3xl
-                  md:text-4xl
-                  font-bold
-                  text-white
-                  "
-                >
-                  Skills
-                </h1>
-              </div>
-            </div>
-
-            <p
-              className="
-              mt-4
-              text-gray-400
-              max-w-xl
-              "
-            >
-              Manage your technical skills, expertise level and portfolio
-              capabilities.
-            </p>
-          </div>
-
-          <button
-            onClick={handleAdd}
-            className="
-            flex
-            items-center
-            justify-center
-            gap-2
-            px-6
-            py-3
-            rounded-2xl
-            bg-gradient-to-r
-            from-blue-600
-            via-purple-600
-            to-cyan-600
-            text-white
-            font-semibold
-            shadow-lg
-            hover:scale-105
-            active:scale-95
-            transition
-            "
-          >
-            <Plus size={18} />
-            Add Skill
-          </button>
-        </div>
-
-        {/* STATS */}
-
-        <div
-          className="
-          grid
-          grid-cols-1
-          md:grid-cols-3
-          gap-4
-          mt-8
-          "
-        >
-          <SkillStat
-            title="Total Skills"
-            value={skills.length}
-            icon={<Code2 />}
-            color="blue"
-          />
-
-          <SkillStat
-            title="Published"
-            value={publishedSkills}
-            icon={<Globe />}
-            color="green"
-          />
-
-          <SkillStat
-            title="Average Level"
-            value={`${averageLevel}%`}
-            icon={<Activity />}
-            color="purple"
-          />
-        </div>
-      </motion.div>
-
-      {/* LIST */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: 20,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        className="
-        relative
-        rounded-3xl
-        border
-        border-white/10
-        bg-white/5
-        backdrop-blur-xl
-        p-4
-        md:p-5
-        "
-      >
-        <SkillList onEdit={handleEdit} onSkillsLoaded={setSkills} />
-      </motion.div>
-
-      {/* MODAL */}
-
-      <SkillModal
-        open={openModal}
-        title={selectedSkill ? "Edit Skill" : "Create Skill"}
-        onClose={handleClose}
-      >
-        <SkillForm skill={selectedSkill} onSubmit={handleSubmitSkill} />
-      </SkillModal>
-    </div>
-  );
-};
-
-const SkillStat = ({ title, value, icon, color }) => {
-  const styles = {
-    blue: "bg-blue-500/20 text-blue-400 border-blue-400/20",
-
-    green: "bg-green-500/20 text-green-400 border-green-400/20",
-
-    purple: "bg-purple-500/20 text-purple-400 border-purple-400/20",
-  };
-
-  return (
-    <div
-      className="
       rounded-2xl
       border
       border-white/10
       bg-white/5
-      p-5
-      hover:-translate-y-1
-      transition-all
-      duration-300
+      backdrop-blur-xl
+      p-4
       "
     >
+      {/* Glow */}
+
       <div
         className="
-        flex
-        justify-between
-        items-center
+        absolute
+        -top-10
+        -right-10
+        w-32
+        h-32
+        rounded-full
+        blur-3xl
+        opacity-0
+        group-hover:opacity-100
+        transition
         "
-      >
-        <div>
-          <p
-            className="
-            text-xs
-            uppercase
-            tracking-wider
-            text-gray-400
-            "
-          >
-            {title}
-          </p>
+        style={{
+          background: skill.color,
+        }}
+      />
 
-          <h2
+      <div className="relative">
+
+        {/* Header */}
+
+        <div className="flex items-start justify-between">
+
+          <div className="flex items-center gap-3">
+
+            <div
+              className="
+              w-14
+              h-14
+              rounded-xl
+              overflow-hidden
+              border
+              border-white/10
+              bg-white/5
+              flex
+              items-center
+              justify-center
+              "
+            >
+              {skill.icon?.url ? (
+                <img
+                  src={skill.icon.url}
+                  alt={skill.name}
+                  className="
+                  w-full
+                  h-full
+                  object-cover
+                  "
+                />
+              ) : (
+                <Code2
+                  size={26}
+                  style={{
+                    color: skill.color,
+                  }}
+                />
+              )}
+            </div>
+
+            <div>
+
+              <h3
+                className="
+                text-lg
+                font-semibold
+                text-white
+                "
+              >
+                {skill.name}
+              </h3>
+
+              <p
+                className="
+                text-xs
+                text-gray-400
+                mt-1
+                "
+              >
+                {skill.category}
+              </p>
+
+            </div>
+
+          </div>
+
+          <span
+            className={`
+            px-2.5
+            py-1
+            rounded-full
+            text-[11px]
+            border
+            ${
+              skill.isPublished
+                ? "bg-green-500/20 border-green-400/20 text-green-300"
+                : "bg-yellow-500/20 border-yellow-400/20 text-yellow-300"
+            }
+            `}
+          >
+            {skill.isPublished ? "Published" : "Draft"}
+          </span>
+
+        </div>
+
+        {/* Progress */}
+
+        <div className="mt-5">
+
+          <div className="flex justify-between mb-2">
+
+            <span className="text-xs text-gray-400">
+              Skill Level
+            </span>
+
+            <span
+              className="text-sm font-semibold"
+              style={{
+                color: skill.color,
+              }}
+            >
+              {skill.level}%
+            </span>
+
+          </div>
+
+          <div
             className="
-            mt-2
-            text-3xl
-            font-bold
-            text-white
+            h-2
+            rounded-full
+            bg-white/10
+            overflow-hidden
             "
           >
-            {value}
-          </h2>
+            <motion.div
+              initial={{
+                width: 0,
+              }}
+              animate={{
+                width: `${skill.level}%`,
+              }}
+              transition={{
+                duration: 0.8,
+              }}
+              className="h-full rounded-full"
+              style={{
+                background: skill.color,
+              }}
+            />
+          </div>
+
         </div>
+
+        {/* Footer */}
 
         <div
-          className={`
-          p-3
-          rounded-xl
-          border
-          ${styles[color]}
-          `}
+          className="
+          flex
+          items-center
+          justify-between
+          mt-5
+          pt-3
+          border-t
+          border-white/10
+          "
         >
-          {icon}
+
+          <span
+            className="
+            text-xs
+            text-gray-500
+            "
+          >
+            Order #{skill.order}
+          </span>
+
+          <div className="flex gap-2">
+
+            <button
+              onClick={() => onPublish(skill._id)}
+              className="
+              p-2
+              rounded-lg
+              bg-green-500/10
+              border
+              border-green-400/20
+              "
+            >
+              {skill.isPublished ? (
+                <Eye
+                  size={15}
+                  className="text-green-400"
+                />
+              ) : (
+                <EyeOff
+                  size={15}
+                  className="text-gray-500"
+                />
+              )}
+            </button>
+
+            <button
+              onClick={() => onEdit(skill)}
+              className="
+              p-2
+              rounded-lg
+              bg-blue-500/10
+              border
+              border-blue-400/20
+              "
+            >
+              <SquarePen
+                size={15}
+                className="text-blue-400"
+              />
+            </button>
+
+            <button
+              onClick={() => onDelete(skill._id)}
+              className="
+              p-2
+              rounded-lg
+              bg-red-500/10
+              border
+              border-red-400/20
+              "
+            >
+              <Trash
+                size={15}
+                className="text-red-400"
+              />
+            </button>
+
+          </div>
+
         </div>
+
       </div>
-    </div>
+    </motion.div>
   );
 };
 
-export default Skills;
+export default SkillCard;

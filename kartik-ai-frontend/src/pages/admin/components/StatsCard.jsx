@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 
-const StatsCard = ({ title, value, icon: Icon }) => {
+const StatsCard = ({ title, value = 0, icon: Icon }) => {
   return (
     <motion.div
       initial={{
@@ -18,81 +18,54 @@ const StatsCard = ({ title, value, icon: Icon }) => {
         duration: 0.25,
       }}
       className="
-      relative
-
-      overflow-hidden
-
-      p-4
-
-      rounded-2xl
-
-      bg-white/5
-
-      backdrop-blur-xl
-
-      border
-      border-white/10
-
-      hover:border-blue-500/40
-
-      hover:shadow-lg
-
-      hover:shadow-blue-500/10
-
-      transition
-
-      group
+        group
+        relative
+        overflow-hidden
+        rounded-2xl
+        border
+        border-white/10
+        bg-white/5
+        p-4
+        backdrop-blur-xl
+        transition
+        hover:border-blue-500/40
+        hover:shadow-lg
+        hover:shadow-blue-500/10
       "
     >
       {/* Glow */}
 
       <div
         className="
-        absolute
-
-        -top-10
-
-        -right-10
-
-        w-24
-
-        h-24
-
-        bg-blue-500/15
-
-        blur-3xl
-
-        rounded-full
-
-        group-hover:bg-blue-500/30
-
-        transition
+          absolute
+          -right-10
+          -top-10
+          h-24
+          w-24
+          rounded-full
+          bg-blue-500/15
+          blur-3xl
+          transition
+          group-hover:bg-blue-500/30
         "
       />
 
       <div
         className="
-        relative
-
-        flex
-
-        items-center
-
-        justify-between
-
-        gap-3
+          relative
+          flex
+          items-center
+          justify-between
+          gap-3
         "
       >
         <div>
           <p
             className="
-            text-[11px]
-
-            uppercase
-
-            tracking-wider
-
-            text-gray-400
+              text-[11px]
+              uppercase
+              tracking-wider
+              text-gray-400
             "
           >
             {title}
@@ -100,14 +73,11 @@ const StatsCard = ({ title, value, icon: Icon }) => {
 
           <h2
             className="
-            text-2xl
-            md:text-3xl
-
-            font-bold
-
-            text-white
-
-            mt-1
+              mt-1
+              text-2xl
+              font-bold
+              text-white
+              md:text-3xl
             "
           >
             {value}
@@ -115,11 +85,9 @@ const StatsCard = ({ title, value, icon: Icon }) => {
 
           <p
             className="
-            text-[11px]
-
-            text-blue-400
-
-            mt-1
+              mt-1
+              text-[11px]
+              text-blue-400
             "
           >
             AI Portfolio Data
@@ -129,21 +97,15 @@ const StatsCard = ({ title, value, icon: Icon }) => {
         {Icon && (
           <div
             className="
-              p-2
-
               rounded-xl
-
-              bg-blue-500/20
-
               border
               border-blue-500/20
-
+              bg-blue-500/20
+              p-2
               text-blue-400
-
-              group-hover:scale-110
-
               transition
-              "
+              group-hover:scale-110
+            "
           >
             <Icon size={18} />
           </div>

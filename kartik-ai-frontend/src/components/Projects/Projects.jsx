@@ -1,42 +1,57 @@
 import { motion } from "framer-motion";
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import FeaturedProject from "./FeaturedProject";
 import ProjectGrid from "./ProjectGrid";
-import ProjectFilter from "./ProjectFilter";
-import { projects } from "./projectsData";
 
+import { getAdminProjects } from "@/api/project.api";
 
 const Projects = () => {
+  const [projects, setProjects] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  const [activeCategory, setActiveCategory] = useState("All");
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const response = await getAdminProjects();
 
+        console.log("Projects Response:", response);
 
-  const featuredProject = projects.find(
-    (project) => project.featured
-  );
+        const projectList = Array.isArray(response.data)
+          ? response.data
+          : response.data?.data || [];
 
+        setProjects(projectList);
+      } catch (error) {
+        console.error("Failed to load projects", error);
+      } finally {
+        setLoading(false);
+      }
+    };
 
-  const otherProjects = useMemo(() => {
+    fetchProjects();
+  }, []);
 
-    const filtered =
-      activeCategory === "All"
-        ? projects
-        : projects.filter(
-            (project) =>
-              project.category === activeCategory
-          );
+  const featuredProject = useMemo(() => {
+    return projects.find((project) => project.featured);
+  }, [projects]);
 
+  const publishedProjects = useMemo(() => {
+    return projects.filter((project) => project.isPublished);
+  }, [projects]);
 
-    return filtered.filter(
-      (project) => !project.featured
+  if (loading) {
+    return (
+      <section
+        id="projects"
+        className="bg-[#050816] py-24 text-center text-slate-400"
+      >
+        Loading Projects...
+      </section>
     );
-
-  }, [activeCategory]);
-
+  }
 
   return (
-
     <section
       id="projects"
       className="
@@ -44,39 +59,29 @@ const Projects = () => {
         isolate
         overflow-hidden
         bg-[#050816]
-        py-24
-        lg:py-32
+        py-20
+        sm:py-24
+        lg:py-28
       "
     >
-
-
       {/* Background */}
-      <div
-        className="
-          absolute
-          inset-0
-          -z-10
-        "
-      >
 
-        {/* Grid */}
+      <div className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">
         <div
           className="
             absolute
             inset-0
-            opacity-[0.03]
+            opacity-[0.025]
             bg-[linear-gradient(to_right,#ffffff_1px,transparent_1px),linear-gradient(to_bottom,#ffffff_1px,transparent_1px)]
             bg-[size:40px_40px]
           "
         />
 
-
-        {/* Cyan Glow */}
         <div
           className="
             absolute
             left-1/2
-            top-20
+            top-0
             h-96
             w-96
             -translate-x-1/2
@@ -86,8 +91,6 @@ const Projects = () => {
           "
         />
 
-
-        {/* Violet Glow */}
         <div
           className="
             absolute
@@ -100,55 +103,26 @@ const Projects = () => {
             blur-[150px]
           "
         />
-
       </div>
-
-
-
 
       <div
         className="
+          relative
           mx-auto
-          max-w-7xl
+        max-w-[1350px]
           px-6
           lg:px-8
         "
       >
-
-
-
-        {/* Heading */}
+        {/* Header */}
 
         <motion.div
-
-          initial={{
-            opacity:0,
-            y:40,
-          }}
-
-          whileInView={{
-            opacity:1,
-            y:0,
-          }}
-
-          viewport={{
-            once:true,
-            amount:0.3,
-          }}
-
-          transition={{
-            duration:0.8,
-            ease:"easeOut",
-          }}
-
-          className="
-            mx-auto
-            max-w-3xl
-            text-center
-          "
+          initial={{ opacity: 0, y: 25 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true }}
+          transition={{ duration: 0.6 }}
+          className="mx-auto max-w-3xl text-center"
         >
-
-
           <span
             className="
               inline-flex
@@ -160,30 +134,24 @@ const Projects = () => {
               py-2
               text-sm
               font-medium
-              tracking-wide
+              tracking-[0.15em]
               text-cyan-300
             "
           >
-            Featured Projects
+            MY WORK
           </span>
-
-
-
 
           <h2
             className="
               mt-6
               text-4xl
               font-black
-              tracking-tight
+              leading-tight
               text-white
-              sm:text-5xl
-              lg:text-6xl
+              md:text-5xl
             "
           >
-
-            Projects I{" "}
-
+            Projects I've{" "}
             <span
               className="
                 bg-gradient-to-r
@@ -196,168 +164,46 @@ const Projects = () => {
             >
               Built
             </span>
-
           </h2>
-
-
 
           <p
             className="
               mx-auto
               mt-6
               max-w-2xl
-              text-base
+              text-lg
               leading-8
               text-slate-400
-              md:text-lg
             "
           >
-
-            A collection of modern applications focused on
-            clean architecture, responsive design, AI
-            integration, and real-world problem solving.
-
+            A collection of modern web applications focused on
+            performance, clean architecture and real-world solutions.
           </p>
-
-
         </motion.div>
-
-
-
 
         {/* Featured */}
 
         {featuredProject && (
-
-          <motion.div
-
-            initial={{
-              opacity:0,
-              y:60,
-            }}
-
-            whileInView={{
-              opacity:1,
-              y:0,
-            }}
-
-            viewport={{
-              once:true,
-              amount:0.2,
-            }}
-
-            transition={{
-              duration:0.9,
-            }}
-
-            className="
-              mt-20
-            "
-          >
-
+          <div className="mt-16">
             <FeaturedProject
-
               title={featuredProject.title}
-
               description={featuredProject.description}
-
               image={featuredProject.image}
-
-              tech={featuredProject.tech}
-
+              techStack={featuredProject.techStack}
               github={featuredProject.github}
-
-              live={featuredProject.live}
-
+              liveDemo={featuredProject.liveDemo}
             />
-
-          </motion.div>
-
+          </div>
         )}
 
+        {/* Grid */}
 
-
-
-
-
-        {/* Other Projects */}
-
-        {otherProjects.length > 0 && (
-
-          <motion.div
-
-            initial={{
-              opacity:0,
-              y:40,
-            }}
-
-            whileInView={{
-              opacity:1,
-              y:0,
-            }}
-
-            viewport={{
-              once:true,
-              amount:0.2,
-            }}
-
-            transition={{
-              duration:0.8,
-              delay:0.2,
-            }}
-
-            className="
-              mt-28
-            "
-
-          >
-
-
-            <h3
-              className="
-                mb-8
-                text-3xl
-                font-black
-                text-white
-              "
-            >
-              More Projects
-            </h3>
-
-
-
-            <ProjectFilter
-
-              active={activeCategory}
-
-              setActive={setActiveCategory}
-
-            />
-
-
-
-            <div className="mt-10">
-
-              <ProjectGrid
-                projects={otherProjects}
-              />
-
-            </div>
-
-
-          </motion.div>
-
-        )}
-
-
+        <div className="mt-20">
+          <ProjectGrid projects={publishedProjects} />
+        </div>
       </div>
-
-
     </section>
-
   );
-
 };
-
 
 export default Projects;

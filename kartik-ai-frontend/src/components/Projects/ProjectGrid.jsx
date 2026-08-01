@@ -1,24 +1,21 @@
 import { motion } from "framer-motion";
 import ProjectCard from "./ProjectCard";
 
-
 const containerVariants = {
   hidden: {},
 
   visible: {
     transition: {
-      staggerChildren: 0.18,
+      staggerChildren: 0.12,
     },
   },
 };
 
-
-
 const cardVariants = {
   hidden: {
     opacity: 0,
-    y: 50,
-    scale: 0.96,
+    y: 24,
+    scale: 0.98,
   },
 
   visible: {
@@ -27,69 +24,58 @@ const cardVariants = {
     scale: 1,
 
     transition: {
-      duration: 0.7,
+      duration: 0.5,
       ease: "easeOut",
     },
   },
 };
 
-
-
-const ProjectGrid = ({ projects }) => {
+const ProjectGrid = ({ projects = [] }) => {
+  if (!projects.length) {
+    return (
+      <div className="py-14 text-center text-slate-400">
+        No projects available.
+      </div>
+    );
+  }
 
   return (
-
     <motion.div
-
       variants={containerVariants}
-
       initial="hidden"
-
       whileInView="visible"
-
       viewport={{
         once: true,
-        amount: 0.15,
+        amount: 0.1,
       }}
-
       className="
-        grid
-        grid-cols-1
-        gap-6
+  grid
+  grid-cols-1
+  gap-4
 
-        sm:gap-8
+  md:grid-cols-2
 
-        md:grid-cols-2
-
-        xl:grid-cols-3
-      "
-
+  lg:grid-cols-3
+"
     >
-
       {projects.map((project) => (
-
         <motion.div
-
-          key={project.id}
-
+          key={project._id ?? project.slug}
           variants={cardVariants}
-
+          className="min-w-0 h-full"
         >
-
           <ProjectCard
-            {...project}
+            title={project.title}
+            description={project.description}
+            image={project.image}
+            techStack={project.techStack}
+            github={project.github}
+            liveDemo={project.liveDemo}
           />
-
         </motion.div>
-
       ))}
-
-
     </motion.div>
-
   );
-
 };
-
 
 export default ProjectGrid;

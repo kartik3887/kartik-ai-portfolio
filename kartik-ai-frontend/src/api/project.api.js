@@ -1,5 +1,11 @@
 import api from "./axios";
 
+// Client 
+export const getAllProjects = async () => {
+  const response = await api.get('/');
+  return response;
+}
+
 /*
 =========================
 Get All Projects (Admin)

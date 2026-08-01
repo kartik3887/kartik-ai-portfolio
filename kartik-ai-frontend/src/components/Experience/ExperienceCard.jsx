@@ -7,34 +7,30 @@ import {
 } from "lucide-react";
 
 const ExperienceCard = ({ experience, index }) => {
-  const {
-    company,
-    role,
-    duration,
-    location,
-    status,
-    description,
-    technologies,
-    achievements,
-  } = experience;
+  const status = experience.currentlyWorking ? "Current" : "Completed";
+
+  const duration = `${new Date(
+    experience.startDate
+  ).toLocaleDateString("en-US", {
+    month: "short",
+    year: "numeric",
+  })} - ${
+    experience.currentlyWorking
+      ? "Present"
+      : new Date(experience.endDate).toLocaleDateString("en-US", {
+          month: "short",
+          year: "numeric",
+        })
+  }`;
 
   return (
     <motion.article
-      initial={{
-        opacity: 0,
-        y: 40,
-      }}
-      whileInView={{
-        opacity: 1,
-        y: 0,
-      }}
-      viewport={{
-        once: true,
-        amount: 0.25,
-      }}
+      initial={{ opacity: 0, y: 30 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, amount: 0.2 }}
       transition={{
-        duration: 0.7,
-        delay: index * 0.15,
+        duration: 0.55,
+        delay: index * 0.1,
         ease: "easeOut",
       }}
       className="
@@ -49,34 +45,36 @@ const ExperienceCard = ({ experience, index }) => {
         backdrop-blur-2xl
         transition-all
         duration-500
-
-        sm:p-8
-
-        hover:-translate-y-2
+        hover:-translate-y-1
         hover:border-cyan-400/30
-        hover:shadow-[0_20px_60px_rgba(34,211,238,0.15)]
+        hover:shadow-[0_20px_60px_rgba(34,211,238,0.12)]
+
+        sm:p-7
+
+        lg:p-8
       "
     >
+      {/* Glow */}
 
-      {/* Animated Glow */}
       <div
         className="
+          pointer-events-none
           absolute
           -right-20
           -top-20
-          h-48
-          w-48
+          h-44
+          w-44
           rounded-full
-          bg-cyan-400/20
-          blur-3xl
+          bg-cyan-400/15
+          blur-[90px]
           transition-all
-          duration-700
-          group-hover:bg-cyan-400/30
+          duration-500
+          group-hover:bg-cyan-400/25
         "
       />
 
+      {/* Top Border */}
 
-      {/* Top Gradient Line */}
       <div
         className="
           absolute
@@ -88,18 +86,14 @@ const ExperienceCard = ({ experience, index }) => {
           from-cyan-400
           via-violet-400
           to-transparent
-          opacity-60
         "
       />
 
-
-
       <div className="relative">
 
-
         {/* Status */}
-        <div className="flex justify-between">
 
+        <div className="flex items-center justify-between">
           <span
             className={`
               inline-flex
@@ -119,202 +113,161 @@ const ExperienceCard = ({ experience, index }) => {
               }
             `}
           >
-
-            <span
-              className="
-                h-2
-                w-2
-                rounded-full
-                bg-current
-              "
-            />
-
+            <span className="h-2 w-2 rounded-full bg-current" />
             {status}
-
           </span>
-
         </div>
 
-
-
         {/* Role */}
+
         <h3
           className="
             mt-6
-            text-2xl
-            font-black
+            text-xl
+            font-bold
+            leading-tight
             text-white
-            sm:text-3xl
+
+            sm:text-2xl
           "
         >
-          {role}
+          {experience.role}
         </h3>
 
-
-
         {/* Company */}
+
         <div
           className="
             mt-3
             flex
             items-center
             gap-2
+            text-lg
+            font-semibold
             text-cyan-300
           "
         >
+          <BriefcaseBusiness size={18} />
 
-          <BriefcaseBusiness size={18}/>
-
-          <span
-            className="
-              font-semibold
-            "
-          >
-            {company}
-          </span>
-
+          <span>{experience.company}</span>
         </div>
 
+        {/* Employment Type */}
 
+        <p className="mt-2 text-sm text-slate-400">
+          {experience.employmentType}
+        </p>
 
-        {/* Meta Information */}
+        {/* Meta */}
+
         <div
           className="
             mt-6
             flex
             flex-wrap
-            gap-4
+            gap-x-6
+            gap-y-3
             text-sm
             text-slate-400
           "
         >
-
           <div className="flex items-center gap-2">
-            <CalendarDays size={16}/>
-            {duration}
+            <CalendarDays size={16} />
+            <span>{duration}</span>
           </div>
 
-
           <div className="flex items-center gap-2">
-            <MapPin size={16}/>
-            {location}
+            <MapPin size={16} />
+            <span>{experience.location || "Remote"}</span>
           </div>
-
         </div>
-
-
 
         {/* Description */}
-        <p
-          className="
-            mt-6
-            leading-8
-            text-slate-400
-          "
-        >
-          {description}
-        </p>
 
-
-
-
-        {/* Achievements */}
-        <div className="mt-8">
-
-          <h4
-            className="
-              mb-4
-              text-sm
-              font-bold
-              uppercase
-              tracking-widest
-              text-cyan-300
-            "
-          >
-            Key Contributions
-          </h4>
-
-
-          <ul className="space-y-3">
-
-            {achievements.map((item)=>(
-              <li
-                key={item}
-                className="
-                  flex
-                  items-start
-                  gap-3
-                  text-sm
-                  leading-7
-                  text-slate-300
-                "
-              >
-
-                <CircleCheck
-                  size={18}
-                  className="
-                    mt-1
-                    flex-shrink-0
-                    text-cyan-400
-                  "
-                />
-
-                {item}
-
-              </li>
-            ))}
-
-          </ul>
-
-        </div>
-
-
-
-
-        {/* Tech Stack */}
-        <div
-          className="
-            mt-8
-            flex
-            flex-wrap
-            gap-2
-          "
-        >
-
-          {technologies.map((tech)=>(
-            <span
-              key={tech}
+        {experience.description?.length > 0 && (
+          <div className="mt-8">
+            <h4
               className="
-                rounded-full
-                border
-                border-white/10
-                bg-white/5
-                px-3
-                py-1.5
-                text-xs
-                font-medium
-                text-slate-300
-
-                transition-all
-                duration-300
-
-                hover:border-cyan-400/40
-                hover:bg-cyan-400/10
-                hover:text-cyan-300
+                mb-4
+                text-sm
+                font-semibold
+                uppercase
+                tracking-[0.2em]
+                text-cyan-300
               "
             >
-              {tech}
-            </span>
-          ))}
+              Key Contributions
+            </h4>
 
-        </div>
+            <ul className="space-y-4">
+              {experience.description.map((item, i) => (
+                <li
+                  key={i}
+                  className="
+                    flex
+                    items-start
+                    gap-3
+                    text-base
+                    leading-7
+                    text-slate-300
+                  "
+                >
+                  <CircleCheck
+                    size={18}
+                    className="
+                      mt-1
+                      shrink-0
+                      text-cyan-400
+                    "
+                  />
 
+                  <span>{item}</span>
+                </li>
+              ))}
+            </ul>
+          </div>
+        )}
 
+        {/* Technologies */}
+
+        {experience.technologies?.length > 0 && (
+          <div
+            className="
+              mt-8
+              flex
+              flex-wrap
+              gap-3
+            "
+          >
+            {experience.technologies.map((tech, i) => (
+              <span
+                key={i}
+                className="
+                  rounded-full
+                  border
+                  border-white/10
+                  bg-white/5
+                  px-4
+                  py-2
+                  text-sm
+                  font-medium
+                  text-slate-300
+                  transition-all
+                  duration-300
+
+                  hover:border-cyan-400/40
+                  hover:bg-cyan-400/10
+                  hover:text-cyan-300
+                "
+              >
+                {tech}
+              </span>
+            ))}
+          </div>
+        )}
       </div>
-
     </motion.article>
   );
 };
-
 
 export default ExperienceCard;

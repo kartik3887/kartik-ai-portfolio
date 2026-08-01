@@ -7,6 +7,12 @@ import { getDashboardStats } from "../controllers/dashboard.controller.js";
 
 const router = express.Router();
 
+/*
+=========================================
+Admin Dashboard Stats
+=========================================
+*/
+
 router.get(
     "/",
     authMiddleware,

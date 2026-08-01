@@ -1,17 +1,18 @@
 import { useEffect, useRef, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
-import { Send, X } from "lucide-react";
+import { Send, X, Sparkles } from "lucide-react";
 
 import { getAIResponse } from "./aiResponse";
 
 const AIChat = ({ closeChat, initialQuestion }) => {
   const [message, setMessage] = useState("");
+
   const [isThinking, setIsThinking] = useState(false);
 
   const [messages, setMessages] = useState([
     {
       role: "ai",
-      text: "👋 Hello! I'm Kartik.AI, your personal portfolio assistant. Ask me anything about Kartik's skills, projects, experience, education or contact details.",
+      text: "👋 Hello! I'm Kartik.AI Core. I can help you explore skills, projects, experience, education and contact information.",
     },
   ]);
 
@@ -30,17 +31,19 @@ const AIChat = ({ closeChat, initialQuestion }) => {
   const sendMessage = (text = message) => {
     if (!text.trim()) return;
 
-    const userMessage = text.trim();
+    const userText = text.trim();
 
     setMessages((prev) => [
       ...prev,
+
       {
         role: "user",
-        text: userMessage,
+        text: userText,
       },
     ]);
 
     setMessage("");
+
     setIsThinking(true);
 
     setTimeout(() => {
@@ -48,411 +51,480 @@ const AIChat = ({ closeChat, initialQuestion }) => {
         ...prev,
         {
           role: "ai",
-          text: getAIResponse(userMessage),
+          text: getAIResponse(userText),
         },
       ]);
-
       setIsThinking(false);
     }, 1000);
   };
 
   useEffect(() => {
     if (!initialQuestion) return;
-
     const timer = setTimeout(() => {
       sendMessage(initialQuestion);
     }, 400);
-
     return () => clearTimeout(timer);
   }, [initialQuestion]);
-    return (
+
+  return (
     <AnimatePresence>
       <motion.div
         initial={{
           opacity: 0,
-          y: 30,
-          scale: 0.95,
+          scale: 0.9,
+          y: 40,
         }}
         animate={{
           opacity: 1,
-          y: 0,
           scale: 1,
+          y: 0,
         }}
         exit={{
           opacity: 0,
-          y: 30,
-          scale: 0.95,
+          scale: 0.9,
+          y: 40,
         }}
         transition={{
           duration: 0.35,
         }}
-        className="
-          fixed
+        className="fixed bottom-5 right-5 z-[9999]
 
-          bottom-4
-          right-4
+flex
+flex-col
 
-          z-[9999]
 
-          flex
-          flex-col
+w-[calc(100vw-2rem)]
 
-          w-[calc(100vw-1.5rem)]
+sm:w-[430px]
 
-          sm:w-[430px]
-          md:w-[460px]
 
-          h-[78vh]
-          max-h-[760px]
+h-[75vh]
 
-          overflow-hidden
+max-h-[720px]
 
-          rounded-3xl
 
-          border
-          border-white/10
+overflow-hidden
 
-          bg-[#050816]/90
 
-          backdrop-blur-3xl
+rounded-[32px]
 
-          shadow-[0_30px_80px_rgba(0,0,0,0.55)]
-        "
+
+border
+
+border-cyan-400/20
+
+
+bg-[#020617]/90
+
+
+backdrop-blur-3xl
+
+
+shadow-[0_30px_100px_rgba(34,211,238,.25)]
+
+"
       >
-        {/* ================= Header ================= */}
+        {/* Scanner */}
 
         <div
           className="
-            flex
-            items-center
-            justify-between
+absolute
 
-            border-b
-            border-white/10
+top-0
 
-            px-5
-            py-5
+left-0
 
-            bg-gradient-to-r
-            from-cyan-500/5
-            via-transparent
-            to-violet-500/5
-          "
+h-[2px]
+
+w-full
+
+bg-gradient-to-r
+
+from-transparent
+
+via-cyan-400
+
+to-transparent
+
+"
+        />
+
+        {/* HEADER */}
+
+        {/* ================= HEADER ================= */}
+
+        <div
+          className="
+    relative
+    flex
+    items-center
+    justify-between
+
+    border-b
+    border-white/10
+
+    px-6
+    py-5
+
+    bg-gradient-to-r
+    from-cyan-500/5
+    via-transparent
+    to-violet-500/5
+  "
         >
-          <div className="flex items-center gap-3">
-            <span
+          {/* Left */}
+
+          <div className="flex items-center gap-4">
+            <div
               className="
-                h-3
-                w-3
+        relative
+        flex
+        h-12
+        w-12
+        items-center
+        justify-center
 
-                rounded-full
+        rounded-2xl
 
-                bg-emerald-400
+        border
+        border-cyan-400/20
 
-                animate-pulse
+        bg-gradient-to-br
+        from-cyan-400/10
+        to-blue-500/10
 
-                shadow-[0_0_15px_#34d399]
-              "
-            />
+        shadow-[0_0_25px_rgba(34,211,238,.15)]
+      "
+            >
+              <Sparkles size={22} className="text-cyan-300" />
+
+              <span
+                className="
+          absolute
+          -top-1
+          -right-1
+
+          h-3
+          w-3
+
+          rounded-full
+
+          bg-emerald-400
+
+          animate-pulse
+        "
+              />
+            </div>
 
             <div>
               <h3
                 className="
-                  text-base
-
-                  font-bold
-
-                  text-white
-                "
+          text-lg
+          font-black
+          tracking-wide
+          text-white
+        "
               >
-                Kartik.AI
+                KARTIK.AI
               </h3>
 
               <p
                 className="
-                  mt-0.5
-
-                  text-xs
-
-                  text-cyan-300
-                "
+          mt-0.5
+          text-[10px]
+          uppercase
+          tracking-[3px]
+          text-cyan-300
+        "
               >
-                AI Portfolio Assistant • Online
+                Neural Assistant Online
               </p>
             </div>
           </div>
 
-          <button
+          {/* Close Button */}
+
+          <motion.button
+            whileHover={{
+              rotate: 90,
+              scale: 1.08,
+            }}
+            whileTap={{
+              scale: 0.92,
+            }}
             onClick={closeChat}
             className="
-              flex
-              h-10
-              w-10
+      group
 
-              items-center
-              justify-center
+      flex
+      h-11
+      w-11
+      items-center
+      justify-center
 
-              rounded-full
+      rounded-xl
 
-              border
-              border-white/10
+      border
+      border-white/10
 
-              bg-white/5
+      bg-white/5
 
-              text-slate-400
+      text-slate-400
 
-              transition-all
-              duration-300
+      transition-all
+      duration-300
 
-              hover:bg-red-500/10
-              hover:text-red-400
-            "
+      hover:border-red-400/40
+      hover:bg-red-500/10
+      hover:text-red-400
+      hover:shadow-[0_0_20px_rgba(248,113,113,.25)]
+    "
           >
-            <X size={18} />
-          </button>
+            <X size={18} className="transition-transform duration-300" />
+          </motion.button>
         </div>
-                {/* ================= Messages ================= */}
+        {/* MESSAGES */}
 
         <div
           className="
-            flex-1
+relative
 
-            overflow-y-auto
+flex-1
 
-            px-5
-            py-5
+overflow-y-auto
 
-            space-y-4
 
-            scrollbar-thin
-            scrollbar-thumb-cyan-500/20
-            scrollbar-track-transparent
-          "
+space-y-4
+
+
+px-5
+
+py-5
+
+"
         >
+          <div
+            className="
+absolute
+
+inset-0
+
+pointer-events-none
+
+bg-[radial-gradient(circle_at_top,rgba(34,211,238,.12),transparent_40%)]
+
+"
+          />
+
           {messages.map((msg, index) => (
             <motion.div
               key={index}
               initial={{
                 opacity: 0,
-                y: 12,
+                y: 15,
               }}
               animate={{
                 opacity: 1,
                 y: 0,
               }}
-              transition={{
-                duration: 0.25,
-              }}
               className={
-                msg.role === "user"
-                  ? "flex justify-end"
-                  : "flex justify-start"
+                msg.role === "user" ? "flex justify-end" : "flex justify-start"
               }
             >
               <div
                 className={`
-                  max-w-[85%]
 
-                  rounded-2xl
+max-w-[85%]
 
-                  px-4
-                  py-3
+rounded-2xl
 
-                  text-sm
+px-4
 
-                  leading-7
+py-3
 
-                  shadow-lg
+text-sm
 
-                  ${
-                    msg.role === "user"
-                      ? `
-                        bg-gradient-to-r
-                        from-cyan-400
-                        to-blue-500
+leading-6
 
-                        text-black
 
-                        rounded-br-md
-                      `
-                      : `
-                        border
-                        border-white/10
+${
+  msg.role === "user"
+    ? `
 
-                        bg-white/10
+bg-gradient-to-r
 
-                        text-slate-200
+from-cyan-400
 
-                        rounded-bl-md
+to-blue-500
 
-                        backdrop-blur-xl
-                      `
-                  }
-                `}
+text-black
+
+rounded-br-md
+
+`
+    : `
+
+border
+
+border-white/10
+
+
+bg-gradient-to-br
+
+from-white/10
+
+to-cyan-500/5
+
+
+text-slate-200
+
+
+rounded-bl-md
+
+
+backdrop-blur-xl
+
+`
+}
+
+
+`}
               >
                 {msg.text}
               </div>
             </motion.div>
           ))}
 
-          {/* ================= Thinking ================= */}
+          {/* THINKING */}
 
           {isThinking && (
             <motion.div
-              initial={{
-                opacity: 0,
-              }}
               animate={{
-                opacity: 1,
+                opacity: [0.3, 1, 0.3],
               }}
-              className="flex justify-start"
+              transition={{
+                repeat: Infinity,
+                duration: 1,
+              }}
+              className="
+flex
+
+items-center
+
+gap-2
+
+text-xs
+
+text-cyan-300
+
+"
             >
-              <div
-                className="
-                  rounded-2xl
+              <span>◉</span>
 
-                  border
-                  border-white/10
-
-                  bg-white/10
-
-                  backdrop-blur-xl
-
-                  px-4
-                  py-3
-                "
-              >
-                <div className="flex items-center gap-1">
-                  <motion.span
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 0.6,
-                    }}
-                  >
-                    ●
-                  </motion.span>
-
-                  <motion.span
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 0.6,
-                      delay: 0.15,
-                    }}
-                  >
-                    ●
-                  </motion.span>
-
-                  <motion.span
-                    animate={{ y: [0, -4, 0] }}
-                    transition={{
-                      repeat: Infinity,
-                      duration: 0.6,
-                      delay: 0.3,
-                    }}
-                  >
-                    ●
-                  </motion.span>
-                </div>
-              </div>
+              <span>Analyzing neural data...</span>
             </motion.div>
           )}
 
           <div ref={messageEndRef} />
         </div>
-                {/* ================= Input ================= */}
+
+        {/* INPUT */}
 
         <div
           className="
-            border-t
-            border-white/10
+border-t
 
-            bg-[#050816]/80
+border-white/10
 
-            p-4
 
-            backdrop-blur-xl
-          "
+p-4
+
+bg-black/20
+
+"
         >
           <div
             className="
-              flex
-              items-center
+flex
 
-              gap-3
+items-center
 
-              rounded-2xl
+gap-3
 
-              border
-              border-white/10
 
-              bg-white/5
+rounded-2xl
 
-              px-4
-              py-2
 
-              transition-all
+border
 
-              focus-within:border-cyan-400/40
-              focus-within:bg-white/10
-            "
+border-white/10
+
+
+bg-white/5
+
+
+px-4
+
+"
           >
             <input
               value={message}
               onChange={(e) => setMessage(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  sendMessage();
-                }
+                if (e.key === "Enter") sendMessage();
               }}
-              placeholder="Ask Kartik.AI anything..."
+              placeholder="Enter AI command..."
               className="
-                flex-1
+flex-1
 
-                bg-transparent
+bg-transparent
 
-                py-2
+py-3
 
-                text-sm
-                text-white
+text-sm
 
-                outline-none
+text-white
 
-                placeholder:text-slate-500
-              "
+outline-none
+
+placeholder:text-slate-500
+
+"
             />
 
             <motion.button
               whileHover={{
-                scale: 1.08,
+                scale: 1.1,
               }}
               whileTap={{
-                scale: 0.95,
+                scale: 0.9,
               }}
               onClick={() => sendMessage()}
               className="
-                flex
+flex
 
-                h-11
-                w-11
+h-11
 
-                items-center
-                justify-center
+w-11
 
-                rounded-xl
+items-center
 
-                bg-gradient-to-r
-                from-cyan-400
-                via-sky-500
-                to-blue-600
+justify-center
 
-                text-black
 
-                shadow-[0_0_20px_rgba(34,211,238,0.35)]
+rounded-xl
 
-                transition-all
-              "
+
+bg-gradient-to-r
+
+from-cyan-400
+
+to-blue-600
+
+
+text-black
+
+"
             >
               <Send size={18} />
             </motion.button>
@@ -460,16 +532,19 @@ const AIChat = ({ closeChat, initialQuestion }) => {
 
           <p
             className="
-              mt-3
+mt-3
 
-              text-center
+text-center
 
-              text-[11px]
+text-[10px]
 
-              text-slate-500
-            "
+tracking-widest
+
+text-slate-500
+
+"
           >
-            Powered by <span className="text-cyan-300">Kartik.AI</span>
+            POWERED BY <span className="text-cyan-300">KARTIK.AI</span>
           </p>
         </div>
       </motion.div>
@@ -478,4 +553,3 @@ const AIChat = ({ closeChat, initialQuestion }) => {
 };
 
 export default AIChat;
-

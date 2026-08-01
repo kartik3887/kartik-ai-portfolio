@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import {
   LayoutDashboard,
   FolderKanban,
+  UserRound,
   Code2,
   Briefcase,
   FileText,
@@ -18,6 +19,11 @@ const menu = [
     name: "Dashboard",
     path: "/admin/dashboard",
     icon: LayoutDashboard,
+  },
+  {
+    name: "Profile",
+    path: "/admin/profile",
+    icon:UserRound,
   },
   {
     name: "Projects",

@@ -11,26 +11,31 @@ const Navbar = () => {
 
   return (
     <>
+      {/* Header */}
       <header
         className="
           fixed
           inset-x-0
-          top-4
+          top-2
           z-[9999]
+
           flex
           justify-center
-          px-4
-          sm:px-6
+
+          px-3
+
+          sm:top-3
+          sm:px-4
         "
       >
+        {/* Navbar */}
         <div
           className="
             group
             relative
 
             flex
-            h-[72px]
-
+            h-14
             w-full
             max-w-7xl
 
@@ -42,23 +47,27 @@ const Navbar = () => {
             border
             border-white/10
 
-            bg-[#050816]/80
+            bg-slate-950/75
 
-            px-5
-            sm:px-8
+            px-4
 
-            backdrop-blur-2xl
+            sm:h-15
+            sm:px-5
 
-            shadow-[0_20px_60px_rgba(0,0,0,0.45)]
+            lg:h-16
+            lg:px-7
+
+            backdrop-blur-xl
+
+            shadow-[0_10px_35px_rgba(0,0,0,0.25)]
 
             transition-all
-            duration-500
+            duration-300
 
-            hover:border-cyan-400/30
+            hover:border-cyan-400/20
           "
         >
-          {/* Glow */}
-
+          {/* Ambient Glow */}
           <div
             className="
               pointer-events-none
@@ -67,17 +76,16 @@ const Navbar = () => {
               rounded-full
 
               bg-gradient-to-r
-              from-cyan-400/10
+              from-cyan-400/5
               via-transparent
-              to-violet-500/10
+              to-violet-500/5
 
+              opacity-60
               blur-xl
-              opacity-70
             "
           />
 
           {/* Inner Border */}
-
           <div
             className="
               pointer-events-none
@@ -90,34 +98,32 @@ const Navbar = () => {
           />
 
           {/* Logo */}
-
           <div className="relative z-10 shrink-0">
             <Logo />
           </div>
 
-          {/* Desktop Menu */}
-
-          <div className="relative z-10 hidden lg:block">
+          {/* Desktop Navigation */}
+          <nav className="relative z-10 hidden lg:block">
             <NavLinks />
-          </div>
+          </nav>
 
-          {/* Right */}
-
-          <div className="relative z-10 flex items-center gap-3">
+          {/* Right Actions */}
+          <div className="relative z-10 flex items-center gap-2.5 lg:gap-3">
+            {/* Resume */}
             <div className="hidden lg:block">
               <ResumeButton />
             </div>
 
+            {/* Mobile Menu */}
             <button
-              onClick={() => setIsOpen(true)}
+              type="button"
               aria-label="Open Menu"
               aria-expanded={isOpen}
+              onClick={() => setIsOpen(true)}
               className="
                 flex
-
-                h-11
-                w-11
-
+                h-9
+                w-9
                 items-center
                 justify-center
 
@@ -133,26 +139,26 @@ const Navbar = () => {
                 transition-all
                 duration-300
 
-                hover:-translate-y-0.5
                 hover:border-cyan-400/40
                 hover:bg-cyan-400/10
                 hover:text-cyan-300
 
                 active:scale-95
 
+                sm:h-10
+                sm:w-10
+
                 lg:hidden
               "
             >
-              <Menu size={22} />
+              <Menu size={19} />
             </button>
           </div>
         </div>
       </header>
 
-      <MobileMenu
-        isOpen={isOpen}
-        onClose={() => setIsOpen(false)}
-      />
+      {/* Mobile Menu */}
+      <MobileMenu isOpen={isOpen} onClose={() => setIsOpen(false)} />
     </>
   );
 };

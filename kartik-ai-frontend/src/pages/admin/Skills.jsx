@@ -1,54 +1,74 @@
 import { useState } from "react";
 import { motion } from "framer-motion";
-import { Plus, Code2, Layers, Globe, Sparkles } from "lucide-react";
+import {
+  Plus,
+  Code2,
+  Globe,
+  Activity,
+} from "lucide-react";
 
 import SkillList from "./components/skills/SkillList";
 import SkillModal from "./components/skills/SkillModal";
 import SkillForm from "./components/skills/SkillForm";
+import SkillStat from "./components/skills/SkillStat";
 
-import { createSkill, updateSkill } from "@/api/skill.api";
+import useSkills from "@/hooks/useSkills";
 
 const Skills = () => {
-  const [openModal, setOpenModal] = useState(false);
+  const {
+    skills,
+    loading,
+    createSkill,
+    updateSkill,
+    deleteSkill,
+    togglePublish,
+  } = useSkills();
 
+  const [openModal, setOpenModal] = useState(false);
   const [selectedSkill, setSelectedSkill] = useState(null);
+
+  const publishedSkills = skills.filter(
+    (skill) => skill.isPublished,
+  ).length;
+
+  const averageLevel = skills.length
+    ? Math.round(
+        skills.reduce(
+          (total, skill) => total + Number(skill.level),
+          0,
+        ) / skills.length,
+      )
+    : 0;
 
   const handleAdd = () => {
     setSelectedSkill(null);
-
     setOpenModal(true);
   };
 
   const handleEdit = (skill) => {
     setSelectedSkill(skill);
-
     setOpenModal(true);
   };
 
   const handleClose = () => {
     setOpenModal(false);
-
     setSelectedSkill(null);
   };
 
-  const handleSubmitSkill = async (formData) => {
-    try {
-      let response;
+  const handleSubmit = async (formData) => {
+    let success = false;
 
-      if (selectedSkill) {
-        response = await updateSkill(selectedSkill._id, formData);
-      } else {
-        response = await createSkill(formData);
-      }
+    if (selectedSkill) {
+      success = await updateSkill(
+        selectedSkill._id,
+        formData,
+      );
+    } else {
+      success = await createSkill(formData);
+    }
 
-      if (response) {
-        handleClose();
-
-        // page reload nahi
-        // SkillList state independent aahe
-      }
-    } catch (error) {
-      console.log(error);
+    if (success) {
+      handleClose();
     }
   };
 
@@ -60,7 +80,7 @@ const Skills = () => {
       overflow-hidden
       "
     >
-      {/* BACKGROUND GLOW */}
+      {/* Glow */}
 
       <div
         className="
@@ -70,7 +90,7 @@ const Skills = () => {
         w-96
         h-96
         rounded-full
-        bg-blue-600/20
+        bg-blue-500/20
         blur-[140px]
         pointer-events-none
         "
@@ -90,7 +110,7 @@ const Skills = () => {
         "
       />
 
-      {/* HEADER */}
+      {/* Header */}
 
       <motion.div
         initial={{
@@ -109,7 +129,13 @@ const Skills = () => {
         bg-white/5
         backdrop-blur-xl
         p-5
-        md:p-6
+         hover:border-blue-500/40
+
+      hover:shadow-lg
+
+      hover:shadow-blue-500/10
+
+      transition
         "
       >
         <div
@@ -119,17 +145,12 @@ const Skills = () => {
           lg:flex-row
           lg:items-center
           lg:justify-between
-          gap-6
+          gap-5
           "
         >
           <div>
-            <div
-              className="
-              flex
-              items-center
-              gap-3
-              "
-            >
+            <div className="flex items-center gap-3">
+
               <div
                 className="
                 p-3
@@ -140,25 +161,25 @@ const Skills = () => {
                 text-blue-400
                 "
               >
-                <Code2 size={26} />
+                <Code2 size={22} />
               </div>
 
               <div>
                 <p
                   className="
-                  text-xs
+                  text-[11px]
                   uppercase
                   tracking-[0.3em]
                   text-blue-400
                   "
                 >
-                  AI SKILL MANAGEMENT
+                  SKILL MANAGEMENT
                 </p>
 
                 <h1
                   className="
+                  mt-1
                   text-3xl
-                  md:text-4xl
                   font-bold
                   text-white
                   "
@@ -170,13 +191,14 @@ const Skills = () => {
 
             <p
               className="
-              mt-4
+              mt-3
+              text-sm
               text-gray-400
-              max-w-xl
               "
             >
-              Manage your technical skills, expertise level and portfolio
-              capabilities.
+              Manage your technical skills,
+              expertise levels and portfolio
+              showcase.
             </p>
           </div>
 
@@ -185,67 +207,110 @@ const Skills = () => {
             className="
             flex
             items-center
-            justify-center
             gap-2
-            px-6
-            py-3
-            rounded-2xl
+            px-5
+            py-2.5
+             rounded-lg
 
-            bg-gradient-to-r
-            from-blue-600
-            via-purple-600
-            to-cyan-600
+        bg-blue-600/20
 
-            text-white
-            font-semibold
+        border
+        border-blue-500/30
 
-            shadow-lg
+        text-blue-300
 
-            hover:scale-105
-            active:scale-95
+        text-sm
 
-            transition
+        hover:bg-blue-600
+
+        hover:text-white
+
+        transition
             "
           >
-            <Plus size={18} />
+            <Plus size={17} />
             Add Skill
           </button>
         </div>
+
+        {/* Stats */}
+
+        <div
+          className="
+          grid
+          md:grid-cols-3
+          gap-4
+          mt-6
+          "
+        >
+          <SkillStat
+            title="Total Skills"
+            value={skills.length}
+            icon={<Code2 size={20} />}
+            color="blue"
+          />
+
+          <SkillStat
+            title="Published"
+            value={publishedSkills}
+            icon={<Globe size={20} />}
+            color="green"
+          />
+
+          <SkillStat
+            title="Average Level"
+            value={`${averageLevel}%`}
+            icon={<Activity size={20} />}
+            color="purple"
+          />
+        </div>
       </motion.div>
 
-      {/* SKILL LIST */}
+      {/* List */}
 
       <motion.div
         initial={{
           opacity: 0,
-          y: 20,
+          y: 15,
         }}
         animate={{
           opacity: 1,
           y: 0,
         }}
         className="
-        relative
-        rounded-3xl
+        rounded-2xl
         border
         border-white/10
         bg-white/5
         backdrop-blur-xl
         p-4
-        md:p-5
         "
       >
-        <SkillList onEdit={handleEdit} />
+        <SkillList
+          skills={skills}
+          loading={loading}
+          onEdit={handleEdit}
+          onDelete={deleteSkill}
+          onPublish={togglePublish}
+        />
       </motion.div>
 
-      {/* MODAL */}
+      {/* Modal */}
 
       <SkillModal
         open={openModal}
-        title={selectedSkill ? "Edit Skill" : "Create Skill"}
+        title={
+          selectedSkill
+            ? "Edit Skill"
+            : "Create Skill"
+        }
         onClose={handleClose}
       >
-        <SkillForm skill={selectedSkill} onSubmit={handleSubmitSkill} />
+        <SkillForm
+          loading={loading}
+          skill={selectedSkill}
+          onSubmit={handleSubmit}
+        />
       </SkillModal>
     </div>
   );

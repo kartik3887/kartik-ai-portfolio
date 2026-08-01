@@ -1,90 +1,92 @@
-import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Code2 } from "lucide-react";
-import toast from "react-hot-toast";
-
-import { getSkills, deleteSkill, togglePublishSkill } from "@/api/skill.api";
-
 import SkillCard from "./SkillCard";
 
-const SkillList = ({ onEdit }) => {
-  const [skills, setSkills] = useState([]);
-
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    const fetchSkills = async () => {
-      try {
-        console.log("SKILL API CALL");
-
-        setLoading(true);
-
-        const response = await getSkills();
-
-        setSkills(response.data || response || []);
-      } catch (error) {
-        toast.error("Failed to load skills");
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSkills();
-  }, []);
-
-  const handleDelete = async (id) => {
-    try {
-      await deleteSkill(id);
-
-      setSkills((prev) => prev.filter((item) => item._id !== id));
-
-      toast.success("Skill deleted");
-    } catch (error) {
-      toast.error("Delete failed");
-    }
-  };
-
-  const handlePublish = async (id) => {
-    try {
-      await togglePublishSkill(id);
-
-      setSkills((prev) =>
-        prev.map((item) =>
-          item._id === id
-            ? {
-                ...item,
-                isPublished: !item.isPublished,
-              }
-            : item,
-        ),
-      );
-    } catch (error) {
-      toast.error("Publish failed");
-    }
-  };
-
+const SkillList = ({
+  skills = [],
+  loading = false,
+  onEdit,
+  onDelete,
+  onPublish,
+}) => {
   if (loading) {
     return (
       <div
         className="
-grid
-grid-cols-1
-sm:grid-cols-2
-xl:grid-cols-3
-gap-5
-"
+        grid
+        grid-cols-1
+        md:grid-cols-2
+        xl:grid-cols-3
+        gap-4
+        "
       >
-        {[1, 2, 3].map((i) => (
+        {Array.from({ length: 6 }).map((_, index) => (
           <div
-            key={i}
+            key={index}
             className="
-h-60
-rounded-3xl
-bg-white/5
-animate-pulse
-"
+            h-[230px]
+            rounded-2xl
+            border
+            border-white/10
+            bg-white/5
+            animate-pulse
+            "
           />
         ))}
+      </div>
+    );
+  }
+
+  if (!skills.length) {
+    return (
+      <div
+        className="
+        flex
+        flex-col
+        items-center
+        justify-center
+        py-16
+        text-center
+        text-gray-400
+        "
+      >
+        <div
+          className="
+          w-14
+          h-14
+          rounded-xl
+          flex
+          items-center
+          justify-center
+          bg-white/5
+          border
+          border-white/10
+          text-2xl
+          "
+        >
+          💻
+        </div>
+
+        <h3
+          className="
+          mt-4
+          text-lg
+          font-semibold
+          text-white
+          "
+        >
+          No Skills Found
+        </h3>
+
+        <p
+          className="
+          mt-1
+          text-xs
+          text-gray-400
+          max-w-sm
+          "
+        >
+          Start by adding your first technical skill to your portfolio.
+        </p>
       </div>
     );
   }
@@ -98,21 +100,35 @@ animate-pulse
         opacity: 1,
       }}
       className="
-grid
-grid-cols-1
-sm:grid-cols-2
-xl:grid-cols-3
-gap-5
-"
+      grid
+      grid-cols-1
+      md:grid-cols-2
+      xl:grid-cols-3
+      gap-4
+      "
     >
-      {skills.map((skill) => (
-        <SkillCard
+      {skills.map((skill, index) => (
+        <motion.div
           key={skill._id}
-          skill={skill}
-          onEdit={onEdit}
-          onDelete={handleDelete}
-          onPublish={handlePublish}
-        />
+          initial={{
+            opacity: 0,
+            y: 15,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            delay: index * 0.05,
+          }}
+        >
+          <SkillCard
+            skill={skill}
+            onEdit={onEdit}
+            onDelete={onDelete}
+            onPublish={onPublish}
+          />
+        </motion.div>
       ))}
     </motion.div>
   );

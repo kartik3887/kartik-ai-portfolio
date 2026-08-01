@@ -4,16 +4,17 @@ const HeroStats = () => {
   return (
     <div
       className="
-        mt-12
+        mt-4
 
         grid
-        grid-cols-2
-        lg:grid-cols-3
-
-        gap-4
-
         w-full
-        max-w-2xl
+        max-w-xl
+        grid-cols-3
+
+        gap-2.5
+
+        sm:mt-4
+        sm:gap-3
       "
     >
       {HERO_DATA.stats.map((stat) => (
@@ -22,33 +23,35 @@ const HeroStats = () => {
           className="
             group
             relative
-
             overflow-hidden
 
-            rounded-2xl
+            rounded-xl
 
             border
             border-white/10
 
-            bg-white/[0.05]
+            bg-white/[0.04]
+
+            p-2.5
+
+            sm:p-3
 
             backdrop-blur-xl
-
-            p-5
-            sm:p-6
 
             transition-all
             duration-300
 
             hover:-translate-y-1
-            hover:border-cyan-400/40
-            hover:bg-white/[0.08]
-            hover:shadow-[0_10px_40px_rgba(34,211,238,0.15)]
+            hover:border-cyan-400/30
+            hover:bg-white/[0.07]
+            hover:shadow-[0_8px_24px_rgba(34,211,238,0.15)]
           "
         >
           {/* Glow */}
+
           <div
             className="
+              pointer-events-none
               absolute
               inset-0
 
@@ -68,39 +71,41 @@ const HeroStats = () => {
 
           <div className="relative">
             {/* Value */}
+
             <h3
               className="
-                text-[clamp(1.8rem,4vw,2.5rem)]
-
-                font-extrabold
-
-                leading-none
-
                 bg-gradient-to-r
                 from-cyan-300
                 to-violet-400
 
                 bg-clip-text
-
                 text-transparent
+
+                text-lg
+                font-black
+
+                leading-none
+                tracking-tight
+
+                sm:text-xl
               "
             >
               {stat.value}
             </h3>
 
             {/* Label */}
+
             <p
               className="
-                mt-3
+                mt-1.5
 
-                text-xs
-                sm:text-sm
-
+                text-[9px]
                 font-medium
-
                 tracking-wide
 
                 text-slate-400
+
+                sm:text-[10px]
               "
             >
               {stat.label}

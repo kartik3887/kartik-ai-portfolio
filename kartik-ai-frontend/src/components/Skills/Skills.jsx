@@ -2,8 +2,12 @@ import { motion } from "framer-motion";
 
 import SkillProgress from "./SkillProgress";
 import SkillHighlights from "./SkillHighlights";
+import SkillCards from "./SkillCard";
+
+
 
 const Skills = () => {
+
   return (
     <section
       id="skills"
@@ -11,86 +15,89 @@ const Skills = () => {
         relative
         overflow-hidden
         bg-[#050816]
-        py-24
-        lg:py-32
+        py-10
+        sm:py-12
+        lg:py-14
       "
     >
-      {/* Background Glow */}
+      {/* ================= Background Glow ================= */}
 
-      <div className="absolute inset-0 -z-10">
-
+      <div className="pointer-events-none absolute inset-0 -z-10">
         <div
           className="
             absolute
-            top-20
-            right-10
-            h-72
-            w-72
+            right-0
+            top-16
+            h-52
+            w-52
             rounded-full
             bg-cyan-500/15
-            blur-[120px]
+            blur-[100px]
+            sm:h-64
+            sm:w-64
           "
         />
 
         <div
           className="
             absolute
-            bottom-20
-            left-10
+            bottom-16
+            left-0
+            h-52
+            w-52
+            rounded-full
+            bg-violet-600/15
+            blur-[100px]
+            sm:h-64
+            sm:w-64
+          "
+        />
+
+        <div
+          className="
+            absolute
+            left-1/3
+            top-1/3
             h-72
             w-72
             rounded-full
-            bg-violet-600/15
-            blur-[120px]
-          "
-        />
-
-        {/* Extra Glow */}
-
-        <div
-          className="
-            absolute
-            left-1/4
-            top-1/3
-            h-96
-            w-96
-            rounded-full
             bg-cyan-500/5
-            blur-[180px]
+            blur-[150px]
           "
         />
 
         <div
           className="
             absolute
-            right-1/4
             bottom-1/4
-            h-96
-            w-96
+            right-1/4
+            h-72
+            w-72
             rounded-full
             bg-violet-500/5
-            blur-[180px]
+            blur-[150px]
           "
         />
-
       </div>
+
+      {/* ================= Container ================= */}
 
       <div
         className="
           relative
           mx-auto
           max-w-7xl
-          px-6
+          px-5
+          sm:px-6
           lg:px-8
         "
       >
-
-        {/* Heading */}
+        {/* ================= Heading ================= */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 40,
+            y: 25,
           }}
           whileInView={{
             opacity: 1,
@@ -98,12 +105,14 @@ const Skills = () => {
           }}
           viewport={{
             once: true,
+            margin: "-50px",
           }}
           transition={{
-            duration: 0.7,
+            duration: 0.6,
           }}
           className="text-center"
         >
+          {/* Badge */}
 
           <span
             className="
@@ -112,31 +121,40 @@ const Skills = () => {
               border
               border-cyan-400/20
               bg-cyan-400/10
-              px-5
-              py-2
-              text-sm
+              px-3.5
+              py-1
+              text-[11px]
               font-medium
               uppercase
-              tracking-[0.25em]
+              tracking-[0.18em]
               text-cyan-400
+
+              sm:px-4
+              sm:py-1.5
+              sm:text-xs
             "
           >
             Skills
           </span>
 
+          {/* Heading */}
+
           <h2
             className="
-              mt-6
-              text-4xl
+              mt-3
+              text-2xl
               font-extrabold
               leading-tight
+              tracking-tight
               text-white
-              sm:text-5xl
-              lg:text-6xl
+
+              sm:mt-4
+              sm:text-3xl
+
+              lg:text-4xl
             "
           >
             Technologies &
-
             <span
               className="
                 block
@@ -150,44 +168,66 @@ const Skills = () => {
             >
               Development Skills
             </span>
-
           </h2>
+
+          {/* Description */}
 
           <p
             className="
               mx-auto
-              mt-6
-              max-w-3xl
-              text-lg
-              leading-8
+              mt-3
+              max-w-xl
+              text-xs
+              leading-5
               text-slate-400
+
+              sm:mt-4
+              sm:text-sm
+              sm:leading-6
             "
           >
-            A collection of technologies and tools I use to build
-            fast, scalable, responsive and AI-powered web
-            applications with modern development practices.
+            A collection of technologies and tools I use to build fast,
+            scalable, responsive and AI-powered web applications with modern
+            development practices.
           </p>
-
         </motion.div>
 
-        {/* Progress */}
+        {/* ================= Skill Progress ================= */}
 
-        <div className="mt-20">
+        <div
+          className="
+            mt-8
+            sm:mt-10
+            lg:mt-12
+          "
+        >
           <SkillProgress />
         </div>
 
-        {/* Technologies */}
+        {/* ================= Skill Cards ================= */}
 
-    
-
-        {/* Highlights */}
-
-        <div className="mt-24">
-          <SkillHighlights />
+        <div
+          className="
+    mt-10
+    sm:mt-12
+    lg:mt-14
+  "
+        >
+          <SkillCards />
         </div>
 
-      </div>
+        {/* ================= Highlights ================= */}
 
+        <div
+          className="
+            mt-12
+            sm:mt-14
+            lg:mt-16
+          "
+        >
+          <SkillHighlights />
+        </div>
+      </div>
     </section>
   );
 };

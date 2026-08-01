@@ -1,40 +1,54 @@
 import { useEffect, useState } from "react";
 
-import {
-  RefreshCw,
-  Activity,
-  Sparkles,
-  FolderKanban,
-  Code2,
-  Briefcase,
-  MessageSquare,
-  Star,
-  Mail,
-} from "lucide-react";
+import { Sparkles } from "lucide-react";
 
-import { motion } from "framer-motion";
+import DashboardHeader from "./components/dashboard/DashboardHeader";
+import StatsGrid from "./components/dashboard/StatsGrid";
 
-import StatsCard from "./components/StatsCard";
+import QuickActions from "./components/dashboard/QuickActions";
+import PortfolioProgress from "./components/dashboard/PortfolioProgress";
+import RecentMessages from "./components/dashboard/RecentMessages";
+import RecentProjects from "./components/dashboard/RecentProjects";
+import ActivityTimeline from "./components/dashboard/ActivityTimeline";
+import SystemStatus from "./components/dashboard/SystemStatus";
+import PortfolioPreview from "./components/dashboard/PortfolioPreview";
 
 import { getDashboardStats } from "@/api/dashboard.api";
 
 const Dashboard = () => {
+  /*
+  =========================================
+  Dashboard State
+  =========================================
+  */
+
   const [stats, setStats] = useState({
     totalProjects: 0,
     totalSkills: 0,
     totalExperience: 0,
     totalMessages: 0,
+    publishedProjects: 0,
     featuredProjects: 0,
+    publishedSkills: 0,
+    publishedExperience: 0,
     unreadMessages: 0,
   });
+
+  const [recentMessages, setRecentMessages] = useState([]);
+
+  const [recentProjects, setRecentProjects] = useState([]);
+
+  const [activities, setActivities] = useState([]);
 
   const [loading, setLoading] = useState(true);
 
   const [error, setError] = useState("");
 
-  useEffect(() => {
-    loadDashboard();
-  }, []);
+  /*
+  =========================================
+  Load Dashboard
+  =========================================
+  */
 
   const loadDashboard = async () => {
     try {
@@ -44,11 +58,44 @@ const Dashboard = () => {
 
       const response = await getDashboardStats();
 
+      /*
+      ================================
+      API Response
+      ================================
+
+      response.data = {
+        stats,
+        recentMessages,
+        recentProjects,
+        activities
+      }
+      */
+
       if (response.success) {
-        setStats(response.stats);
+        const dashboard = response.data;
+
+        setStats(
+          dashboard.stats || {
+            totalProjects: 0,
+            totalSkills: 0,
+            totalExperience: 0,
+            totalMessages: 0,
+            publishedProjects: 0,
+            featuredProjects: 0,
+            publishedSkills: 0,
+            publishedExperience: 0,
+            unreadMessages: 0,
+          },
+        );
+
+        setRecentMessages(dashboard.recentMessages || []);
+
+        setRecentProjects(dashboard.recentProjects || []);
+
+        setActivities(dashboard.activities || []);
       }
     } catch (error) {
-      console.error(error);
+      console.error("Dashboard Load Error:", error);
 
       setError(error.response?.data?.message || "Failed to load dashboard");
     } finally {
@@ -56,315 +103,225 @@ const Dashboard = () => {
     }
   };
 
+  /*
+  =========================================
+  Initial Load
+  =========================================
+  */
+
+  useEffect(() => {
+    loadDashboard();
+  }, []);
+
+  /*
+  =========================================
+  Loading State
+  =========================================
+  */
+
   if (loading) {
     return (
       <div
         className="
-        min-h-[60vh]
+          min-h-[60vh]
 
-        flex
-        items-center
-        justify-center
-        "
-      >
-        <div
-          className="
           flex
           items-center
-          gap-2
+          justify-center
 
-          text-sm
           text-gray-400
+        "
+      >
+        <Sparkles
+          size={18}
+          className="
+            mr-2
+            animate-pulse
+            text-blue-400
           "
-        >
-          <Sparkles size={18} className="animate-pulse" />
-          Loading AI Dashboard...
-        </div>
+        />
+        Loading Dashboard...
       </div>
     );
   }
+
+  /*
+  =========================================
+  Error State
+  =========================================
+  */
 
   if (error) {
     return (
       <div
         className="
-        min-h-[60vh]
+          min-h-[60vh]
 
-        flex
-        flex-col
-        items-center
-        justify-center
+          flex
+          flex-col
+          items-center
+          justify-center
 
-        gap-4
+          gap-4
+
+          text-red-400
         "
       >
-        <p className="text-red-400 text-sm">{error}</p>
+        <p>{error}</p>
 
         <button
           onClick={loadDashboard}
           className="
-          flex
-          items-center
-          gap-2
+            rounded-lg
 
-          px-4
-          py-2
+            border
+            border-red-500/30
 
-          rounded-lg
+            bg-red-500/10
 
-          bg-blue-600
+            px-4
+            py-2
 
-          text-white
+            text-sm
 
-          text-sm
+            text-red-300
 
-          hover:bg-blue-700
+            transition
 
-          transition
+            hover:bg-red-500/20
           "
         >
-          <RefreshCw size={15} />
-          Retry
+          Try Again
         </button>
       </div>
     );
   }
 
+  /*
+  =========================================
+  Dashboard UI
+  =========================================
+  */
+
   return (
     <div
       className="
-      relative
+        relative
 
-      space-y-5
+        space-y-6
 
-      overflow-hidden
+        overflow-hidden
       "
     >
-      {/* Background Glow */}
+      {/* =================================
+          Background Glow
+      ================================= */}
 
       <div
         className="
-        absolute
+          pointer-events-none
 
-        -top-20
-        -right-20
+          absolute
 
-        w-64
-        h-64
+          -right-20
+          -top-20
 
-        bg-blue-600/10
+          h-72
+          w-72
 
-        blur-[90px]
+          rounded-full
 
-        rounded-full
+          bg-blue-500/10
+
+          blur-[100px]
         "
       />
 
       <div
         className="
-        absolute
+          pointer-events-none
 
-        -bottom-20
-        -left-20
+          absolute
 
-        w-64
-        h-64
+          -bottom-20
+          -left-20
 
-        bg-purple-600/10
+          h-72
+          w-72
 
-        blur-[90px]
+          rounded-full
 
-        rounded-full
+          bg-purple-500/10
+
+          blur-[100px]
         "
       />
 
-      {/* Header */}
+      {/* =================================
+          Header
+      ================================= */}
 
-      <motion.div
-        initial={{
-          opacity: 0,
-          y: -10,
-        }}
-        animate={{
-          opacity: 1,
-          y: 0,
-        }}
-        transition={{
-          duration: 0.3,
-        }}
-        className="
-        relative
+      <DashboardHeader onRefresh={loadDashboard} />
 
-        flex
-        flex-col
-        sm:flex-row
+      {/* =================================
+          Stats
+      ================================= */}
 
-        sm:items-center
-        sm:justify-between
+      <StatsGrid stats={stats} />
 
-        gap-4
+      {/* =================================
+          Quick Actions
+      ================================= */}
 
-        p-4
+      <QuickActions />
 
-        rounded-2xl
+      {/* =================================
+          Portfolio Progress
+      ================================= */}
 
-        bg-white/5
+      <PortfolioProgress stats={stats} />
 
-        backdrop-blur-xl
-
-        border
-        border-white/10
-        "
-      >
-        <div>
-          <div
-            className="
-            flex
-            items-center
-            gap-2
-
-            mb-2
-            "
-          >
-            <div
-              className="
-              p-2
-
-              rounded-lg
-
-              bg-blue-500/20
-
-              text-blue-400
-              "
-            >
-              <Activity size={17} />
-            </div>
-
-            <span
-              className="
-              text-[11px]
-
-              text-blue-400
-
-              font-medium
-
-              tracking-wider
-              "
-            >
-              AI COMMAND CENTER
-            </span>
-          </div>
-
-          <h1
-            className="
-            text-xl
-            sm:text-2xl
-
-            font-bold
-
-            text-white
-            "
-          >
-            Dashboard
-          </h1>
-
-          <p
-            className="
-            text-xs
-
-            text-gray-400
-
-            mt-1
-            "
-          >
-            Welcome back, Kartik 👋 Manage your AI portfolio ecosystem.
-          </p>
-        </div>
-
-        <button
-          onClick={loadDashboard}
-          className="
-          flex
-          items-center
-          justify-center
-
-          gap-2
-
-          px-4
-          py-2
-
-          rounded-lg
-
-          bg-blue-600/20
-
-          border
-          border-blue-500/30
-
-          text-blue-300
-
-          text-sm
-
-          hover:bg-blue-600
-
-          hover:text-white
-
-          transition
-          "
-        >
-          <RefreshCw size={15} />
-          Refresh
-        </button>
-      </motion.div>
-
-      {/* Stats */}
+      {/* =================================
+          Recent Data
+      ================================= */}
 
       <div
         className="
-        relative
+          grid
 
-        grid
+          gap-6
 
-        grid-cols-1
-
-        sm:grid-cols-2
-
-        xl:grid-cols-3
-
-        gap-4
+          lg:grid-cols-2
         "
       >
-        <StatsCard
-          title="Projects"
-          value={stats.totalProjects}
-          icon={FolderKanban}
-        />
+        <RecentMessages messages={recentMessages} />
 
-        <StatsCard title="Skills" value={stats.totalSkills} icon={Code2} />
-
-        <StatsCard
-          title="Experience"
-          value={stats.totalExperience}
-          icon={Briefcase}
-        />
-
-        <StatsCard
-          title="Messages"
-          value={stats.totalMessages}
-          icon={MessageSquare}
-        />
-
-        <StatsCard
-          title="Featured Projects"
-          value={stats.featuredProjects}
-          icon={Star}
-        />
-
-        <StatsCard
-          title="Unread Messages"
-          value={stats.unreadMessages}
-          icon={Mail}
-        />
+        <RecentProjects projects={recentProjects} />
       </div>
+
+      {/* =================================
+          Activity + System
+      ================================= */}
+
+      <div
+        className="
+          grid
+
+          gap-6
+
+          lg:grid-cols-2
+        "
+      >
+        <ActivityTimeline activities={activities} />
+
+        <SystemStatus />
+      </div>
+
+      {/* =================================
+          Portfolio Preview
+      ================================= */}
+
+      <PortfolioPreview />
     </div>
   );
 };

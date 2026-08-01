@@ -5,117 +5,104 @@ const HeroButtons = () => {
   return (
     <div
       className="
-        mt-10
-
+        mt-4
         flex
-        flex-col
-        sm:flex-row
-
-        items-center
-        justify-center
-        lg:justify-start
-
-        gap-4
-
         w-full
+        flex-col
+        gap-2.5
+
+        sm:mt-4
+        sm:w-auto
+        sm:flex-row
+        sm:items-center
+        sm:gap-3
       "
     >
-      {/* Primary Button */}
+      {/* ================= Primary CTA ================= */}
+
       <a
         href={HERO_DATA.buttons.primary.href}
         className="
           group
 
           flex
+          h-10
+          w-full
           items-center
           justify-center
           gap-2
-
-          w-full
-          sm:w-auto
 
           rounded-full
 
           bg-gradient-to-r
           from-cyan-400
           via-blue-500
-          to-violet-500
+          to-violet-600
 
-          px-7
-          sm:px-8
+          px-5
 
-          py-3.5
-
-          text-sm
-          sm:text-base
-
-          font-semibold
-
+          text-[13px]
+          font-bold
           text-white
 
-          shadow-lg
-          shadow-cyan-500/20
+          shadow-[0_8px_28px_rgba(34,211,238,0.22)]
 
           transition-all
           duration-300
 
           hover:-translate-y-1
-          hover:shadow-cyan-500/40
+          hover:shadow-[0_12px_38px_rgba(34,211,238,0.32)]
 
-          active:scale-[0.98]
+          active:scale-[0.97]
 
-          focus:outline-none
-          focus:ring-2
-          focus:ring-cyan-400/50
+          sm:h-10
+          sm:w-auto
+          sm:px-5
         "
       >
-        {HERO_DATA.buttons.primary.text}
+        <span>{HERO_DATA.buttons.primary.text}</span>
 
         <ArrowRight
-          size={18}
+          size={15}
+          strokeWidth={2.2}
           className="
             transition-transform
             duration-300
-
             group-hover:translate-x-1
           "
         />
       </a>
 
-      {/* Secondary Button */}
+      {/* ================= Secondary CTA ================= */}
+
       <a
         href={HERO_DATA.buttons.secondary.href}
         target="_blank"
         rel="noopener noreferrer"
         className="
+          group
+
           flex
+          h-10
+          w-full
           items-center
           justify-center
           gap-2
 
-          w-full
-          sm:w-auto
-
           rounded-full
 
           border
-          border-white/15
+          border-white/10
 
-          bg-white/5
+          bg-white/[0.04]
+
+          px-5
+
+          text-[13px]
+          font-semibold
+          text-slate-200
 
           backdrop-blur-xl
-
-          px-7
-          sm:px-8
-
-          py-3.5
-
-          text-sm
-          sm:text-base
-
-          font-semibold
-
-          text-slate-200
 
           transition-all
           duration-300
@@ -124,16 +111,24 @@ const HeroButtons = () => {
           hover:border-cyan-400/40
           hover:bg-cyan-400/10
 
-          active:scale-[0.98]
+          active:scale-[0.97]
 
-          focus:outline-none
-          focus:ring-2
-          focus:ring-cyan-400/40
+          sm:h-10
+          sm:w-auto
+          sm:px-5
         "
       >
-        <Download size={18} />
+        <Download
+          size={15}
+          strokeWidth={2}
+          className="
+            transition-transform
+            duration-300
+            group-hover:-translate-y-1
+          "
+        />
 
-        {HERO_DATA.buttons.secondary.text}
+        <span>{HERO_DATA.buttons.secondary.text}</span>
       </a>
     </div>
   );

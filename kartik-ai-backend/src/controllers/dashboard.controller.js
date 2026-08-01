@@ -1,17 +1,26 @@
-import { getDashboardStatsService } from "../services/dashboard.service.js";
+import asyncHandler from "../utils/asyncHandler.js";
+import ApiResponse from "../utils/ApiResponse.js";
 
-export const getDashboardStats = async (req, res) => {
-  try {
-    const stats = await getDashboardStatsService();
+import {
+  getDashboardStatsService,
+} from "../services/dashboard.service.js";
 
-    res.status(200).json({
-      success: true,
-      stats,
-    });
-  } catch (error) {
-    res.status(500).json({
-      success: false,
-      message: error.message,
-    });
+/*
+=========================================
+Get Dashboard Data
+=========================================
+*/
+export const getDashboardStats = asyncHandler(
+  async (req, res) => {
+    const dashboard =
+      await getDashboardStatsService();
+
+    return res.status(200).json(
+      new ApiResponse(
+        200,
+        dashboard,
+        "Dashboard data fetched successfully"
+      )
+    );
   }
-};
+);

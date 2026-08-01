@@ -24,16 +24,12 @@ const skillSchema = new mongoose.Schema(
       ],
     },
 
+    // React Icon name
+    // Example: FaReact, FaNodeJs, SiJavascript
     icon: {
-      url: {
-        type: String,
-        default: "",
-      },
-
-      public_id: {
-        type: String,
-        default: "",
-      },
+      type: String,
+      required: true,
+      trim: true,
     },
 
     level: {

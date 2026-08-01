@@ -1,5 +1,5 @@
 import { useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 import { X } from "lucide-react";
 
 const SkillModal = ({ open, title, children, onClose }) => {
@@ -38,55 +38,55 @@ const SkillModal = ({ open, title, children, onClose }) => {
           }}
           onClick={onClose}
           className="
-        fixed
+          fixed
 
-        top-16
-        bottom-0
-        left-0
-        right-0
+          top-20
+          bottom-0
+          left-0
+          right-0
 
-        z-[999]
+          z-[999]
 
-        flex
+          flex
 
-        items-center
+          items-center
 
-        justify-center
+          justify-center
 
-        md:pl-72
+          bg-black/70
 
-        bg-black/80
+          backdrop-blur-md
 
-        backdrop-blur-md
+          p-3
 
-        p-3
-        sm:p-5
-        "
+          lg:pl-72
+          "
         >
           {/* Glow */}
 
           <div
             className="
-          absolute
+            absolute
 
-          w-[500px]
-          h-[500px]
+            w-80
 
-          rounded-full
+            h-80
 
-          bg-cyan-500/20
+            rounded-full
 
-          blur-[140px]
+            bg-blue-500/20
 
-          pointer-events-none
-          "
+            blur-[120px]
+
+            pointer-events-none
+            "
           />
 
           <motion.div
             initial={{
               opacity: 0,
               scale: 0.95,
-              y: 30,
+              y: 20,
             }}
             animate={{
               opacity: 1,
@@ -96,65 +96,30 @@ const SkillModal = ({ open, title, children, onClose }) => {
             exit={{
               opacity: 0,
               scale: 0.95,
-              y: 30,
+              y: 20,
             }}
             transition={{
               duration: 0.25,
             }}
             onClick={(e) => e.stopPropagation()}
             className="
-          relative
-
-          flex
-
-          flex-col
-
-          w-full
-
-          max-w-3xl
-
-          h-[calc(100vh-7rem)]
-
-          rounded-3xl
-
-          overflow-hidden
-
-          bg-[#080d1a]/95
-
-          backdrop-blur-2xl
-
-          border
-
-          border-white/10
-
-          shadow-[0_25px_80px_rgba(0,0,0,0.6)]
-
-          "
-          >
-            {/* HEADER */}
-
-            <div
-              className="
-            sticky
-
-            top-0
-
-            z-20
+            relative
 
             flex
 
-            items-center
+            flex-col
 
-            justify-between
+            w-full
 
-            px-5
-            sm:px-7
+            max-w-3xl
 
-            py-4
+            max-h-[82vh]
 
-            shrink-0
+            rounded-2xl
 
-            border-b
+            overflow-hidden
+
+            border
 
             border-white/10
 
@@ -162,36 +127,55 @@ const SkillModal = ({ open, title, children, onClose }) => {
 
             backdrop-blur-xl
 
+            shadow-2xl
             "
+          >
+            {/* HEADER */}
+
+            <div
+              className="
+              flex
+
+              items-center
+
+              justify-between
+
+              px-4
+
+              py-3
+
+              border-b
+
+              border-white/10
+
+              bg-[#080d1a]/90
+              "
             >
               <div>
                 <p
                   className="
-                text-[11px]
+                  text-[10px]
 
-                uppercase
+                  uppercase
 
-                tracking-[0.35em]
+                  tracking-[0.3em]
 
-                text-cyan-400
-
-                "
+                  text-blue-400
+                  "
                 >
-                  AI SKILL MANAGEMENT
+                  SKILL CMS
                 </p>
 
                 <h2
                   className="
-                mt-1
+                  mt-1
 
-                text-xl
-                sm:text-2xl
+                  text-lg
 
-                font-bold
+                  font-bold
 
-                text-white
-
-                "
+                  text-white
+                  "
                 >
                   {title}
                 </h2>
@@ -200,36 +184,34 @@ const SkillModal = ({ open, title, children, onClose }) => {
               <button
                 onClick={onClose}
                 className="
-              w-10
-              h-10
+                flex
 
-              flex
-              items-center
-              justify-center
+                h-9
 
-              rounded-xl
+                w-9
 
-              bg-white/5
+                items-center
 
-              border
+                justify-center
 
-              border-white/10
+                rounded-xl
 
-              text-gray-400
+                bg-white/5
 
-              hover:bg-red-500
+                border
 
-              hover:text-white
+                border-white/10
 
-              hover:rotate-90
+                text-gray-400
 
-              transition-all
+                transition
 
-              duration-300
+                hover:bg-red-500
 
-              "
+                hover:text-white
+                "
               >
-                <X size={20} />
+                <X size={18} />
               </button>
             </div>
 
@@ -237,22 +219,14 @@ const SkillModal = ({ open, title, children, onClose }) => {
 
             <div
               className="
-            flex-1
+              flex-1
 
-            overflow-y-auto
+              overflow-y-auto
 
-            px-5
-            sm:px-7
+              p-4
 
-            py-5
-
-            scrollbar-thin
-
-            scrollbar-thumb-white/20
-
-            scrollbar-track-transparent
-
-            "
+              dashboard-scroll
+              "
             >
               {children}
             </div>

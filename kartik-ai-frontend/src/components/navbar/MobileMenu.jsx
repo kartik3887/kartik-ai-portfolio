@@ -1,150 +1,249 @@
-import { X } from "lucide-react";
+import { X, Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
 
 import NavLinks from "./NavLinksMenu";
 import ResumeButton from "./ResumeButton";
 
 const MobileMenu = ({ isOpen, onClose }) => {
   return (
-    <div
-      className={`
-        fixed
-        inset-0
-        z-[9998]
-        lg:hidden
-        transition-all
-        duration-300
-        ${
-          isOpen
-            ? "visible opacity-100"
-            : "invisible opacity-0 pointer-events-none"
-        }
-      `}
-    >
-      {/* Backdrop */}
-
-      <div
-        onClick={onClose}
-        className="
-          absolute
-          top-0
-          left-0
-          right-0
-          bottom-0
-          bg-black/70
-          backdrop-blur-lg
-        "
-      />
-
-      {/* Sliding Panel */}
-
-      <aside
-        className={`
-          absolute
-          top-[92px]
-          right-4
-          bottom-4
-
-          w-[85%]
-          max-w-sm
-
-          rounded-3xl
-
-          border
-          border-white/10
-
-          bg-[#050816]/95
-
-          backdrop-blur-2xl
-
-          shadow-[0_30px_80px_rgba(0,0,0,0.6)]
-
-          flex
-          flex-col
-
-          overflow-hidden
-
-          transition-transform
-          duration-500
-          ease-out
-
-          ${isOpen ? "translate-x-0" : "translate-x-[120%]"}
-        `}
-      >
-        {/* Header */}
-
-        <div
+    <AnimatePresence>
+      {isOpen && (
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.25 }}
           className="
-            flex
-            items-center
-            justify-between
-
-            px-6
-            py-6
-
-            border-b
-            border-white/10
+            fixed
+            inset-0
+            z-[9998]
+            lg:hidden
           "
         >
-          <div>
-            <h2 className="text-xl font-bold text-white">
-              Kartik.AI
-            </h2>
+          {/* Backdrop */}
 
-            <p className="mt-1 text-xs uppercase tracking-[0.25em] text-cyan-300">
-              Navigation
-            </p>
-          </div>
-
-          <button
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
             onClick={onClose}
-            aria-label="Close Menu"
             className="
-              flex
-              h-10
-              w-10
-              items-center
-              justify-center
+              absolute
+              inset-0
 
-              rounded-full
+              bg-black/75
+
+              backdrop-blur-xl
+            "
+          />
+
+          {/* Panel */}
+
+          <motion.aside
+            initial={{
+              x: "110%",
+              opacity: 0,
+            }}
+            animate={{
+              x: 0,
+              opacity: 1,
+            }}
+            exit={{
+              x: "110%",
+              opacity: 0,
+            }}
+            transition={{
+              type: "spring",
+              damping: 26,
+              stiffness: 240,
+            }}
+            className="
+              absolute
+
+              top-20
+              right-4
+              bottom-4
+
+              w-[88%]
+              max-w-[370px]
+
+              overflow-hidden
+
+              rounded-[30px]
 
               border
               border-white/10
 
-              bg-white/5
+              bg-slate-950/90
 
-              text-slate-400
+              backdrop-blur-2xl
 
-              transition-all
-
-              hover:border-cyan-400/40
-              hover:bg-cyan-400/10
-              hover:text-white
+              shadow-[0_25px_80px_rgba(0,0,0,0.45)]
             "
           >
-            <X size={20} />
-          </button>
-        </div>
+            {/* Glow */}
 
-        {/* Navigation */}
+            <div
+              className="
+                pointer-events-none
 
-        <div className="flex-1 overflow-y-auto px-6 py-8">
-          <NavLinks mobile onLinkClick={onClose} />
-        </div>
+                absolute
 
-        {/* Resume */}
+                -top-24
+                right-0
 
-        <div
-          className="
-            border-t
-            border-white/10
+                h-64
+                w-64
 
-            p-6
-          "
-        >
-          <ResumeButton />
-        </div>
-      </aside>
-    </div>
+                rounded-full
+
+                bg-cyan-400/15
+
+                blur-[100px]
+              "
+            />
+
+            <div
+              className="
+                pointer-events-none
+
+                absolute
+
+                -bottom-24
+                -left-10
+
+                h-64
+                w-64
+
+                rounded-full
+
+                bg-violet-500/10
+
+                blur-[100px]
+              "
+            />
+
+            {/* Header */}
+
+            <div
+              className="
+                relative
+
+                flex
+                items-center
+                justify-between
+
+                border-b
+                border-white/10
+
+                px-6
+                py-5
+              "
+            >
+              <div>
+                <div className="flex items-center gap-2">
+                  <Sparkles size={14} className="text-cyan-400" />
+
+                  <span
+                    className="
+                      text-[11px]
+
+                      uppercase
+
+                      tracking-[0.25em]
+
+                      text-cyan-300
+                    "
+                  >
+                    Navigation
+                  </span>
+                </div>
+
+                <h2
+                  className="
+                    mt-2
+
+                    text-2xl
+
+                    font-black
+
+                    text-white
+                  "
+                >
+                  Kartik.AI
+                </h2>
+              </div>
+
+              <button
+                onClick={onClose}
+                aria-label="Close Menu"
+                className="
+                  flex
+
+                  h-10
+                  w-10
+
+                  items-center
+                  justify-center
+
+                  rounded-full
+
+                  border
+                  border-white/10
+
+                  bg-white/5
+
+                  text-slate-400
+
+                  transition-all
+                  duration-300
+
+                  hover:border-cyan-400/40
+                  hover:bg-cyan-400/10
+                  hover:text-white
+
+                  active:scale-95
+                "
+              >
+                <X size={18} />
+              </button>
+            </div>
+
+            {/* Navigation */}
+
+            <div
+              className="
+                relative
+
+                flex-1
+
+                overflow-y-auto
+
+                px-7
+                py-8
+              "
+            >
+              <NavLinks mobile onLinkClick={onClose} />
+            </div>
+
+            {/* Footer */}
+
+            <div
+              className="
+                border-t
+                border-white/10
+
+                bg-white/[0.02]
+
+                p-6
+              "
+            >
+              <ResumeButton />
+            </div>
+          </motion.aside>
+        </motion.div>
+      )}
+    </AnimatePresence>
   );
 };
 

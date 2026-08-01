@@ -37,18 +37,40 @@ const AIAssistant = () => {
     <>
       <div
         className="
+          relative
+
           flex
           w-full
-          max-w-[420px]
+          max-w-[340px]
+
           flex-col
           items-center
           justify-center
-          gap-8
+
+          gap-2
+
+          lg:max-w-[360px]
+          lg:-translate-y-2
+
+          xl:max-w-[380px]
         "
       >
-        {/* AI Orb */}
-        <div className="relative flex justify-center">
-          <div className="absolute inset-0 rounded-full bg-cyan-400/20 blur-[90px]" />
+        {/* ================= ORB ================= */}
+
+        <div className="relative flex items-center justify-center">
+          <div
+            className="
+              pointer-events-none
+              absolute
+              inset-0
+
+              rounded-full
+
+              bg-cyan-400/25
+
+              blur-[70px]
+            "
+          />
 
           <AIOrb
             onActivated={() => {
@@ -58,116 +80,152 @@ const AIAssistant = () => {
           />
         </div>
 
-        {/* Glass Card */}
+        {/* ================= HUD PANEL ================= */}
+
         <div
           className="
             relative
+
             w-full
-            rounded-[28px]
+
+            overflow-hidden
+
+            rounded-[24px]
+
             border
             border-white/10
-            bg-white/[0.06]
-            p-5
-            sm:p-6
+
+            bg-black/30
+
+            p-4
+
             backdrop-blur-2xl
-            shadow-[0_20px_80px_rgba(0,0,0,0.45)]
-            overflow-hidden
+
+            shadow-[0_20px_60px_rgba(0,0,0,.45)]
           "
         >
-          {/* Glow */}
+          {/* Scanner line */}
+
           <div
             className="
+              pointer-events-none
               absolute
-              inset-x-0
+              left-0
               top-0
-              h-40
-              bg-gradient-to-b
-              from-cyan-400/10
-              via-cyan-300/5
+
+              h-[2px]
+              w-full
+
+              bg-gradient-to-r
+              from-transparent
+              via-cyan-400
               to-transparent
             "
           />
 
           <div className="relative">
-            {/* Status */}
-            <div className="flex items-center justify-center gap-2">
+            {/* ================= STATUS ================= */}
+
+            <div
+              className="
+                flex
+                items-center
+                justify-center
+                gap-2
+              "
+            >
               <span
                 className="
-                  h-3
-                  w-3
+                  h-1.5
+                  w-1.5
+
                   rounded-full
+
                   bg-emerald-400
-                  shadow-[0_0_15px_#34d399]
+
+                  shadow-[0_0_12px_#34d399]
+
                   animate-pulse
                 "
               />
 
-              <span
+              <p
                 className="
-                  text-xs
-                  sm:text-sm
-                  font-medium
-                  tracking-wide
+                  text-[10px]
+                  uppercase
+                  tracking-[2.5px]
                   text-emerald-300
                 "
               >
-                {orbActive ? "AI Listening..." : "AI System Online"}
-              </span>
+                {orbActive ? "Listening" : "System Online"}
+              </p>
             </div>
 
-            {/* Title */}
+            {/* ================= TITLE ================= */}
+
             <h2
               className="
-                mt-5
+                mt-2
+
                 text-center
+
                 text-2xl
-                sm:text-3xl
-                font-extrabold
+
+                font-black
+
                 bg-gradient-to-r
                 from-cyan-300
-                to-violet-400
+                via-blue-400
+                to-purple-400
+
                 bg-clip-text
                 text-transparent
               "
             >
-              Kartik AI
+              Kartik.AI
             </h2>
 
-            {/* Typing */}
+            {/* ================= TYPING ================= */}
+
             <div
               className="
-                mt-5
-                min-h-[64px]
+                mt-1
+
+                min-h-[32px]
+
                 text-center
-                text-sm
-                sm:text-[15px]
-                leading-7
+
+                text-xs
+
+                leading-5
+
                 text-slate-400
               "
             >
               <TypeAnimation
                 sequence={[
-                  "Initializing AI System...",
+                  "Initializing neural core...",
                   1500,
-                  "Loading Kartik's Skills...",
+                  "Scanning portfolio data...",
                   1500,
-                  "Analyzing Projects...",
-                  1500,
-                  "Hello 👋 I'm Kartik AI Assistant",
+                  "Ready to assist you 🚀",
                   3000,
                 ]}
-                speed={50}
+                speed={45}
                 repeat={Infinity}
               />
             </div>
 
-                        {/* Suggestions */}
+            {/* ================= QUICK COMMANDS ================= */}
+
             <div
               className="
-                mt-6
+                mt-3
+
                 grid
                 grid-cols-2
-                gap-3
+
+                gap-1.5
               "
             >
               {suggestions.map((item) => (
@@ -175,19 +233,21 @@ const AIAssistant = () => {
                   key={item.label}
                   onClick={() => handleSuggestion(item.question)}
                   className="
-                    rounded-xl
+                    rounded-lg
+
                     border
                     border-white/10
+
                     bg-white/5
-                    px-3
-                    py-3
-                    text-xs
-                    sm:text-sm
-                    font-medium
+
+                    py-2
+
+                    text-[11px]
+
                     text-slate-200
-                    transition-all
-                    duration-300
-                    hover:-translate-y-1
+
+                    transition
+
                     hover:border-cyan-400/40
                     hover:bg-cyan-400/10
                   "
@@ -197,43 +257,49 @@ const AIAssistant = () => {
               ))}
             </div>
 
-            {/* Talk Button */}
+            {/* ================= CTA ================= */}
+
             <button
               onClick={() => {
                 setInitialQuestion("");
                 setOpenChat(true);
               }}
               className="
-                mt-6
-                flex
+                mt-3
+
                 w-full
-                items-center
-                justify-center
+
                 rounded-full
+
                 bg-gradient-to-r
                 from-cyan-400
                 via-blue-500
-                to-violet-500
-                py-3.5
-                text-sm
-                sm:text-base
-                font-semibold
+                to-violet-600
+
+                py-2.5
+
+                text-xs
+
+                font-bold
                 text-white
-                shadow-lg
-                shadow-cyan-500/20
-                transition-all
-                duration-300
-                hover:scale-[1.02]
-                active:scale-[0.98]
+
+                shadow-[0_10px_30px_rgba(34,211,238,.28)]
+
+                transition
+
+                hover:-translate-y-1
+
+                active:scale-95
               "
             >
-              🎙️ Talk With AI
+              🎙 Talk With Kartik AI
             </button>
           </div>
         </div>
       </div>
 
-      {/* AI Chat */}
+      {/* ================= AI CHAT ================= */}
+
       {openChat && (
         <AIChat
           closeChat={() => setOpenChat(false)}

@@ -1,28 +1,64 @@
 import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
+
+import { getAdminExperiences } from "@/api/experience.api";
 import ExperienceCard from "./ExperienceCard";
 
-const ExperienceTimeline = ({ experiences }) => {
-  return (
-    <div className="relative mt-20">
+const ExperienceTimeline = () => {
+  const [experiences, setExperiences] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-      {/* Timeline Line */}
+  useEffect(() => {
+    const fetchExperiences = async () => {
+      try {
+        const response = await getAdminExperiences();
+
+        const data = response?.data || [];
+
+        data.sort((a, b) => a.order - b.order);
+
+        setExperiences(data);
+      } catch (error) {
+        console.error("Failed to load experiences:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchExperiences();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="py-12 text-center text-slate-400">
+        Loading experiences...
+      </div>
+    );
+  }
+
+  if (!experiences.length) {
+    return (
+      <div className="py-12 text-center text-slate-400">
+        No experiences found.
+      </div>
+    );
+  }
+
+  return (
+    <div className="relative">
+      {/* ================= Timeline Line ================= */}
+
       <motion.div
-        initial={{
-          height: 0,
-        }}
-        whileInView={{
-          height: "100%",
-        }}
-        viewport={{
-          once: true,
-        }}
+        initial={{ height: 0 }}
+        whileInView={{ height: "100%" }}
+        viewport={{ once: true }}
         transition={{
-          duration: 1.5,
+          duration: 1.2,
           ease: "easeOut",
         }}
         className="
           absolute
-          left-5
+          left-6
           top-0
           hidden
           w-[2px]
@@ -34,73 +70,77 @@ const ExperienceTimeline = ({ experiences }) => {
         "
       />
 
+      {/* ================= Experience List ================= */}
 
       <div
         className="
-          space-y-14
-          lg:space-y-16
+          space-y-12
+
+          lg:space-y-14
         "
       >
-
         {experiences.map((experience, index) => (
-
           <div
-            key={experience.id}
+            key={experience._id}
             className="
               relative
               flex
               items-start
-              gap-8
+              gap-6
+
+              lg:gap-8
             "
           >
+            {/* ================= Timeline Node ================= */}
 
-            {/* Timeline Node */}
             <motion.div
               initial={{
-                opacity:0,
-                scale:0.5,
+                opacity: 0,
+                scale: 0.5,
               }}
               whileInView={{
-                opacity:1,
-                scale:1,
+                opacity: 1,
+                scale: 1,
               }}
               viewport={{
-                once:true,
-                amount:0.5,
+                once: true,
+                amount: 0.4,
               }}
               transition={{
-                duration:0.5,
-                delay:index * 0.15,
+                duration: 0.4,
+                delay: index * 0.1,
               }}
               className="
                 relative
                 z-10
                 hidden
-                h-10
-                w-10
-                flex-shrink-0
+                h-12
+                w-12
+                shrink-0
                 items-center
                 justify-center
                 rounded-full
                 border
                 border-cyan-400/30
                 bg-[#050816]
-                shadow-[0_0_25px_rgba(34,211,238,0.15)]
+                shadow-[0_0_25px_rgba(34,211,238,0.18)]
+
                 lg:flex
               "
             >
+              {/* Pulse */}
 
-              {/* Pulse Ring */}
               <span
                 className="
                   absolute
                   inset-0
                   animate-ping
                   rounded-full
-                  bg-cyan-400/20
+                  bg-cyan-400/15
                 "
               />
 
+              {/* Core */}
 
               <span
                 className="
@@ -112,52 +152,40 @@ const ExperienceTimeline = ({ experiences }) => {
                   shadow-[0_0_20px_rgba(34,211,238,0.9)]
                 "
               />
-
             </motion.div>
 
+            {/* ================= Card ================= */}
 
-
-            {/* Experience Card Wrapper */}
             <motion.div
               initial={{
-                opacity:0,
-                x:40,
+                opacity: 0,
+                x: 25,
               }}
               whileInView={{
-                opacity:1,
-                x:0,
+                opacity: 1,
+                x: 0,
               }}
               viewport={{
-                once:true,
-                amount:0.3,
+                once: true,
+                amount: 0.2,
               }}
               transition={{
-                duration:0.7,
-                delay:index * 0.15,
-                ease:"easeOut",
+                duration: 0.5,
+                delay: index * 0.1,
+                ease: "easeOut",
               }}
-              className="
-                flex-1
-              "
+              className="min-w-0 flex-1"
             >
-
               <ExperienceCard
                 experience={experience}
                 index={index}
               />
-
             </motion.div>
-
-
           </div>
-
         ))}
-
       </div>
-
     </div>
   );
 };
-
 
 export default ExperienceTimeline;

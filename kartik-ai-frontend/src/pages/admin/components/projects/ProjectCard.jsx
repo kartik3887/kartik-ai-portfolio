@@ -9,7 +9,13 @@ import {
 
 import { motion } from "framer-motion";
 
-const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
+const ProjectCard = ({
+  project,
+  onEdit,
+  onDelete,
+  onPublish,
+  onFeatured,
+}) => {
   return (
     <motion.div
       initial={{
@@ -35,18 +41,26 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
 
       rounded-2xl
 
-      border
-
-      border-white/10
-
       bg-white/5
 
       backdrop-blur-xl
 
+      border
+      border-white/10
+
+      hover:border-blue-500/40
+
+      hover:shadow-lg
+
+      hover:shadow-blue-500/10
+
+      transition
+
       p-4
       "
     >
-      {/* Glow */}
+
+      {/* AI Glow */}
 
       <div
         className="
@@ -64,15 +78,18 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
 
         rounded-full
 
-        opacity-0
+        opacity-70
 
-        group-hover:opacity-100
+        group-hover:bg-blue-500/40
 
         transition
         "
       />
 
+
       <div className="relative">
+
+
         {/* Image */}
 
         <div
@@ -84,8 +101,12 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
           rounded-xl
           "
         >
+
           <img
-            src={project.image?.url || "https://placehold.co/600x400"}
+            src={
+              project.image?.url ||
+              "https://placehold.co/600x400"
+            }
             alt={project.title}
             className="
             w-full
@@ -94,13 +115,18 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
 
             object-cover
 
-            group-hover:scale-105
+            brightness-90
+
+            group-hover:brightness-100
+
+            group-hover:scale-110
 
             transition
 
             duration-500
             "
           />
+
 
           {/* Status */}
 
@@ -117,73 +143,95 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
             gap-2
             "
           >
+
             {project.featured && (
+
               <span
                 className="
-                  flex
+                flex
 
-                  items-center
+                items-center
 
-                  gap-1
+                gap-1
 
-                  px-2
+                px-2
 
-                  py-1
+                py-1
 
-                  rounded-full
+                rounded-full
 
-                  text-[11px]
+                text-[11px]
 
-                  bg-yellow-500/20
+                bg-yellow-500/20
 
-                  border
+                border
 
-                  border-yellow-400/20
+                border-yellow-400/20
 
-                  text-yellow-300
-                  "
+                text-yellow-300
+
+                shadow-sm
+
+                shadow-yellow-500/20
+                "
               >
-                <Sparkles size={11} />
+                <Sparkles size={11}/>
                 Featured
               </span>
+
             )}
+
+
 
             {project.isPublished && (
+
               <span
                 className="
-                  flex
+                flex
 
-                  items-center
+                items-center
 
-                  gap-1
+                gap-1
 
-                  px-2
+                px-2
 
-                  py-1
+                py-1
 
-                  rounded-full
+                rounded-full
 
-                  text-[11px]
+                text-[11px]
 
-                  bg-green-500/20
+                bg-green-500/20
 
-                  border
+                border
 
-                  border-green-400/20
+                border-green-400/20
 
-                  text-green-300
-                  "
+                text-green-300
+
+                shadow-sm
+
+                shadow-green-500/20
+                "
               >
-                <Rocket size={11} />
+                <Rocket size={11}/>
                 Live
               </span>
+
             )}
+
           </div>
+
         </div>
+
+
 
         {/* Content */}
 
+
         <div className="mt-4">
+
+
           <h2
             className="
             text-lg
@@ -197,6 +245,8 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
           >
             {project.title}
           </h2>
+
+
 
           <p
             className="
@@ -212,7 +262,11 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
             {project.description}
           </p>
 
+
+
+
           {/* Tech Stack */}
+
 
           <div
             className="
@@ -225,33 +279,43 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
             mt-3
             "
           >
-            {project.techStack?.slice(0, 4).map((tech) => (
+
+            {project.techStack
+              ?.slice(0,4)
+              .map((tech)=>(
+
               <span
                 key={tech}
                 className="
-                  px-2
+                px-2
 
-                  py-1
+                py-1
 
-                  rounded-lg
+                rounded-lg
 
-                  text-[11px]
+                text-[11px]
 
-                  bg-blue-500/10
+                bg-blue-500/10
 
-                  border
+                border
 
-                  border-blue-400/20
+                border-blue-400/20
 
-                  text-blue-300
-                  "
+                text-blue-300
+                "
               >
                 {tech}
               </span>
+
             ))}
+
           </div>
 
+
+
+
           {/* Links */}
+
 
           <div
             className="
@@ -262,78 +326,106 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
             mt-4
             "
           >
+
+
             {project.github && (
+
               <a
                 href={project.github}
                 target="_blank"
+                rel="noreferrer"
                 className="
-                  flex
+                flex
 
-                  items-center
+                items-center
 
-                  gap-1
+                gap-1
 
-                  px-3
+                px-3
 
-                  py-1.5
+                py-1.5
 
-                  rounded-lg
+                rounded-lg
 
-                  bg-white/5
+                bg-white/5
 
-                  border
+                border
 
-                  border-white/10
+                border-white/10
 
-                  text-xs
+                text-xs
 
-                  text-gray-300
+                text-gray-300
 
-                  hover:text-white
+                hover:text-white
 
-                  transition
-                  "
+                hover:bg-white/10
+
+                hover:scale-105
+
+                transition
+                "
               >
-                <Github size={13} />
+                <Github size={13}/>
                 Code
               </a>
+
             )}
 
+
+
+
             {project.liveDemo && (
+
               <a
                 href={project.liveDemo}
                 target="_blank"
+                rel="noreferrer"
                 className="
-                  flex
+                flex
 
-                  items-center
+                items-center
 
-                  gap-1
+                gap-1
 
-                  px-3
+                px-3
 
-                  py-1.5
+                py-1.5
 
-                  rounded-lg
+                rounded-lg
 
-                  bg-blue-500/20
+                bg-blue-500/20
 
-                  border
+                border
 
-                  border-blue-400/20
+                border-blue-400/20
 
-                  text-xs
+                text-xs
 
-                  text-blue-300
-                  "
+                text-blue-300
+
+                hover:bg-blue-500/30
+
+                hover:scale-105
+
+                transition
+                "
               >
-                <ExternalLink size={13} />
+                <ExternalLink size={13}/>
                 Demo
               </a>
+
             )}
+
+
           </div>
 
+
+
+
+
           {/* Actions */}
+
 
           <div
             className="
@@ -352,9 +444,14 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
             border-white/10
             "
           >
+
+
+
             <div className="flex gap-2">
+
+
               <button
-                onClick={() => onFeatured(project._id)}
+                onClick={()=>onFeatured(project._id)}
                 className="
                 p-2
 
@@ -365,20 +462,34 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
                 border
 
                 border-yellow-400/20
+
+                hover:bg-yellow-500/20
+
+                hover:scale-110
+
+                transition
                 "
               >
+
                 <Sparkles
                   size={15}
                   className={
                     project.featured
-                      ? "text-yellow-400 fill-yellow-400"
-                      : "text-gray-500"
+                    ?
+                    "text-yellow-400 fill-yellow-400"
+                    :
+                    "text-gray-500"
                   }
                 />
+
               </button>
 
+
+
+
+
               <button
-                onClick={() => onPublish(project._id)}
+                onClick={()=>onPublish(project._id)}
                 className="
                 p-2
 
@@ -389,20 +500,40 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
                 border
 
                 border-green-400/20
+
+                hover:bg-green-500/20
+
+                hover:scale-110
+
+                transition
                 "
               >
+
                 <Rocket
                   size={15}
                   className={
-                    project.isPublished ? "text-green-400" : "text-gray-500"
+                    project.isPublished
+                    ?
+                    "text-green-400"
+                    :
+                    "text-gray-500"
                   }
                 />
+
               </button>
+
+
             </div>
 
+
+
+
+
             <div className="flex gap-2">
+
+
               <button
-                onClick={() => onEdit(project)}
+                onClick={()=>onEdit(project)}
                 className="
                 p-2
 
@@ -413,13 +544,28 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
                 border
 
                 border-blue-400/20
+
+                hover:bg-blue-500/20
+
+                hover:scale-110
+
+                transition
                 "
               >
-                <SquarePen size={15} className="text-blue-400" />
+
+                <SquarePen
+                  size={15}
+                  className="text-blue-400"
+                />
+
               </button>
 
+
+
+
+
               <button
-                onClick={() => onDelete(project)}
+                onClick={()=>onDelete(project)}
                 className="
                 p-2
 
@@ -430,16 +576,38 @@ const ProjectCard = ({ project, onEdit, onDelete, onPublish, onFeatured }) => {
                 border
 
                 border-red-400/20
+
+                hover:bg-red-500/20
+
+                hover:scale-110
+
+                transition
                 "
               >
-                <Trash size={15} className="text-red-400" />
+
+                <Trash
+                  size={15}
+                  className="text-red-400"
+                />
+
               </button>
+
+
             </div>
+
+
           </div>
+
+
         </div>
+
+
       </div>
+
+
     </motion.div>
   );
 };
+
 
 export default ProjectCard;

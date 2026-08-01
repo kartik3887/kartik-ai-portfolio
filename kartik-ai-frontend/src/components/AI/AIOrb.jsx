@@ -7,8 +7,8 @@ const AIOrb = ({ onActivated }) => {
   const mouseX = useMotionValue(0);
   const mouseY = useMotionValue(0);
 
-  const rotateX = useTransform(mouseY, [-200, 200], [18, -18]);
-  const rotateY = useTransform(mouseX, [-200, 200], [-18, 18]);
+  const rotateX = useTransform(mouseY, [-200, 200], [15, -15]);
+  const rotateY = useTransform(mouseX, [-200, 200], [-15, 15]);
 
   const speechRef = useRef(null);
 
@@ -19,58 +19,27 @@ const AIOrb = ({ onActivated }) => {
     mouseY.set(e.clientY - rect.top - rect.height / 2);
   };
 
-  // ------------------------------------
-  // AI Welcome Voice
-  // ------------------------------------
   const speakWelcome = () => {
     window.speechSynthesis.cancel();
 
     const speech = new SpeechSynthesisUtterance(
-      "Hello! I'm Kartik AI Assistant. Welcome to my portfolio. How can I help you today?"
+      "Hello! I'm Kartik AI Assistant. Welcome to my portfolio. How can I help you today?",
     );
 
     speech.lang = "en-US";
     speech.rate = 0.95;
-    speech.pitch = 1;
-    speech.volume = 1;
 
-    // ✅ Open chat only after voice completes
     speech.onend = () => {
-      if (typeof onActivated === "function") {
+      if (onActivated) {
         onActivated();
       }
     };
 
-    const loadVoice = () => {
-      const voices = window.speechSynthesis.getVoices();
+    speechRef.current = speech;
 
-      const preferred =
-        voices.find(
-          (voice) =>
-            voice.lang.startsWith("en") &&
-            (voice.name.includes("Google") ||
-              voice.name.includes("Microsoft") ||
-              voice.name.includes("Samantha"))
-        ) || voices.find((voice) => voice.lang.startsWith("en"));
-
-      if (preferred) {
-        speech.voice = preferred;
-      }
-
-      speechRef.current = speech;
-      window.speechSynthesis.speak(speech);
-    };
-
-    if (window.speechSynthesis.getVoices().length === 0) {
-      window.speechSynthesis.onvoiceschanged = loadVoice;
-    } else {
-      loadVoice();
-    }
+    window.speechSynthesis.speak(speech);
   };
 
-  // ------------------------------------
-  // Activate AI
-  // ------------------------------------
   const handleActivate = () => {
     if (!active) {
       setActive(true);
@@ -90,70 +59,76 @@ const AIOrb = ({ onActivated }) => {
   return (
     <motion.div
       onMouseMove={handleMouseMove}
-      style={{ perspective: 1000 }}
+      style={{
+        perspective: 1200,
+      }}
+      animate={{
+        y: [0, -5, 0],
+      }}
+      transition={{
+        duration: 4,
+        repeat: Infinity,
+        ease: "easeInOut",
+      }}
       className="
         relative
         flex
         items-center
         justify-center
-        w-28 h-28
-        sm:w-36 sm:h-36
-        md:w-40 md:h-40
-        lg:w-44 lg:h-44
+
+        w-52
+        h-52
+
+        sm:w-56
+        sm:h-56
+
+        lg:w-56
+        lg:h-56
+
+        xl:w-60
+        xl:h-60
       "
     >
-      {/* Ambient Glow */}
+      {/* ================= Main Glow ================= */}
 
       <motion.div
         animate={{
-          scale: active ? [1, 1.3, 1] : [1, 1.15, 1],
-          opacity: active ? [0.35, 0.75, 0.35] : [0.25, 0.5, 0.25],
+          scale: active ? [1, 1.25, 1] : [1, 1.1, 1],
+          opacity: active ? [0.5, 0.8, 0.5] : [0.25, 0.42, 0.25],
         }}
         transition={{
-          duration: active ? 1.6 : 3,
+          duration: 3,
           repeat: Infinity,
-          ease: "easeInOut",
         }}
         className="
           absolute
-          w-44 h-44
-          sm:w-60 sm:h-60
-          md:w-64 md:h-64
-          lg:w-72 lg:h-72
+
+          w-52
+          h-52
+
+          sm:w-56
+          sm:h-56
+
+          xl:w-60
+          xl:h-60
+
           rounded-full
+
           bg-gradient-to-r
-          from-cyan-400/30
-          via-sky-500/20
-          to-violet-500/30
+          from-cyan-400/40
+          via-blue-500/30
+          to-purple-500/40
+
           blur-3xl
         "
       />
 
-      {/* Rotating Ring */}
+      {/* ================= Outer Energy Ring ================= */}
 
       <motion.div
-        animate={{ rotate: 360 }}
-        transition={{
-          duration: 14,
-          repeat: Infinity,
-          ease: "linear",
+        animate={{
+          rotate: 360,
         }}
-        className="
-          absolute
-          w-32 h-32
-          sm:w-44 sm:h-44
-          md:w-48 md:h-48
-          lg:w-52 lg:h-52
-          rounded-full
-          border
-          border-cyan-400/30
-        "
-      />
-
-      {/* Dashed Ring */}
-
-      <motion.div
-        animate={{ rotate: -360 }}
         transition={{
           duration: 20,
           repeat: Infinity,
@@ -161,17 +136,61 @@ const AIOrb = ({ onActivated }) => {
         }}
         className="
           absolute
-          w-36 h-36
-          sm:w-48 sm:h-48
-          md:w-52 md:h-52
-          lg:w-56 lg:h-56
+
+          w-48
+          h-48
+
+          sm:w-52
+          sm:h-52
+
+          lg:w-52
+          lg:h-52
+
+          xl:w-56
+          xl:h-56
+
           rounded-full
+
           border
-          border-violet-400/30
-          border-dashed
+          border-cyan-400/40
         "
       />
-            {/* AI Core */}
+
+      {/* ================= Second Ring ================= */}
+
+      <motion.div
+        animate={{
+          rotate: -360,
+        }}
+        transition={{
+          duration: 28,
+          repeat: Infinity,
+          ease: "linear",
+        }}
+        className="
+          absolute
+
+          w-40
+          h-40
+
+          sm:w-44
+          sm:h-44
+
+          lg:w-44
+          lg:h-44
+
+          xl:w-48
+          xl:h-48
+
+          rounded-full
+
+          border
+          border-dashed
+          border-purple-400/40
+        "
+      />
+
+      {/* ================= Core ================= */}
 
       <motion.div
         onClick={handleActivate}
@@ -181,108 +200,108 @@ const AIOrb = ({ onActivated }) => {
           transformStyle: "preserve-3d",
         }}
         whileHover={{
-          scale: 1.08,
+          scale: 1.06,
         }}
         whileTap={{
-          scale: 0.96,
+          scale: 0.95,
         }}
         animate={{
-          scale: active ? 1.08 : 1,
           boxShadow: active
-            ? "0 0 120px rgba(34,211,238,.8)"
-            : "0 0 70px rgba(34,211,238,.45)",
-        }}
-        transition={{
-          type: "spring",
-          stiffness: 220,
-          damping: 16,
+            ? "0 0 90px rgba(34,211,238,.85)"
+            : "0 0 55px rgba(34,211,238,.45)",
         }}
         className="
           relative
+
           flex
           items-center
           justify-center
+
           cursor-pointer
-          w-24 h-24
-          sm:w-32 sm:h-32
-          md:w-36 md:h-36
-          lg:w-40 lg:h-40
+
+          w-32
+          h-32
+
+          sm:w-36
+          sm:h-36
+
+          lg:w-36
+          lg:h-36
+
+          xl:w-40
+          xl:h-40
+
           rounded-full
+
           bg-gradient-to-br
           from-cyan-300
-          via-blue-500
-          to-violet-600
+          via-blue-600
+          to-violet-700
         "
       >
-        <motion.div
-          animate={{
-            scale: [1, 1.06, 1],
-          }}
-          transition={{
-            duration: 2,
-            repeat: Infinity,
-            ease: "easeInOut",
-          }}
+        {/* ================= Inner Glass ================= */}
+
+        <div
           className="
             flex
             flex-col
             items-center
             justify-center
-            w-16 h-16
-            sm:w-24 sm:h-24
-            md:w-28 md:h-28
+
+            w-24
+            h-24
+
+            sm:w-28
+            sm:h-28
+
+            xl:w-28
+            xl:h-28
+
             rounded-full
+
             bg-black/80
+
             border
-            border-white/10
+            border-white/20
+
             backdrop-blur-xl
-            text-white
-            font-black
           "
         >
-          <motion.span
-            animate={
-              active
-                ? {
-                    rotate: [0, 8, -8, 0],
-                    scale: [1, 1.15, 1],
-                  }
-                : {}
-            }
-            transition={{
-              duration: 0.8,
-              repeat: Infinity,
-            }}
-            className="text-base sm:text-xl md:text-2xl"
+          <span
+            className="
+              text-3xl
+
+              sm:text-4xl
+            "
           >
             🤖
-          </motion.span>
+          </span>
 
           <span
             className={`
               mt-1
+
               text-[9px]
-              sm:text-[11px]
-              md:text-xs
+
+              sm:text-[10px]
+
               font-semibold
-              tracking-wide
-              transition-all
-              duration-300
-              ${
-                active
-                  ? "text-cyan-300"
-                  : "text-slate-300 animate-pulse"
-              }
+
+              tracking-widest
+
+              ${active ? "text-cyan-300" : "text-slate-300"}
             `}
           >
-            {active ? "AI Activated" : "Activate AI"}
+            {active ? "AI ONLINE" : "KARTIK.AI"}
           </span>
-        </motion.div>
+        </div>
 
-        {/* Inner Glow */}
+        {/* ================= Core Pulse ================= */}
+
         <motion.div
           animate={{
-            opacity: active ? [0.4, 0.9, 0.4] : [0.2, 0.5, 0.2],
+            scale: active ? [1, 1.3, 1] : [1, 1.15, 1],
+            opacity: [0.2, 0.55, 0.2],
           }}
           transition={{
             duration: 2,
@@ -290,14 +309,49 @@ const AIOrb = ({ onActivated }) => {
           }}
           className="
             absolute
-            inset-2
+            inset-4
+
             rounded-full
-            bg-cyan-400/10
+
+            bg-cyan-400/20
+
             blur-xl
-            pointer-events-none
           "
         />
       </motion.div>
+
+      {/* ================= Status ================= */}
+
+      <div
+        className="
+          absolute
+          bottom-1
+
+          rounded-full
+
+          border
+          border-white/10
+
+          bg-black/60
+
+          px-2.5
+          py-0.5
+
+          backdrop-blur-xl
+
+          text-[8px]
+
+          sm:text-[9px]
+
+          tracking-[0.16em]
+
+          text-cyan-300
+
+          whitespace-nowrap
+        "
+      >
+        ● AI ASSISTANT READY
+      </div>
     </motion.div>
   );
 };

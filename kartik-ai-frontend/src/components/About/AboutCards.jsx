@@ -1,10 +1,5 @@
 import { motion } from "framer-motion";
-import {
-  Code2,
-  BrainCircuit,
-  Rocket,
-  Zap,
-} from "lucide-react";
+import { Code2, BrainCircuit, Rocket, Zap } from "lucide-react";
 
 const cards = [
   {
@@ -35,65 +30,82 @@ const cards = [
 
 const AboutCards = () => {
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+    <div
+      className="
+        grid
+        gap-2.5
+        sm:grid-cols-2
+        sm:gap-3
+        lg:grid-cols-4
+        lg:gap-3
+      "
+    >
       {cards.map((card, index) => {
         const Icon = card.icon;
 
         return (
           <motion.div
             key={card.title}
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{
+              once: true,
+              margin: "-40px",
+            }}
             transition={{
-              duration: 0.5,
-              delay: index * 0.15,
+              duration: 0.4,
+              delay: index * 0.08,
             }}
             className="
               group
               relative
               overflow-hidden
-              rounded-3xl
+              rounded-xl
               border
               border-white/10
-              bg-white/5
-              p-6
+              bg-white/[0.04]
+              p-3.5
               backdrop-blur-xl
               transition-all
-              duration-500
-              hover:-translate-y-3
-              hover:border-cyan-400/40
-              hover:shadow-[0_0_40px_rgba(34,211,238,0.12)]
+              duration-300
+              hover:-translate-y-1.5
+              hover:border-cyan-400/30
+              hover:bg-white/[0.07]
+              hover:shadow-[0_8px_30px_rgba(34,211,238,0.10)]
+              sm:rounded-2xl
+              sm:p-4
             "
           >
-            {/* Background Glow */}
+            {/* Glow */}
+
             <div
               className="
+                pointer-events-none
                 absolute
                 inset-0
                 -z-10
-                rounded-3xl
                 bg-gradient-to-br
-                from-violet-600/20
+                from-violet-600/15
                 via-cyan-500/10
                 to-transparent
                 opacity-0
                 blur-xl
                 transition
-                duration-500
+                duration-300
                 group-hover:opacity-100
               "
             />
 
             {/* Icon */}
+
             <div
               className="
                 flex
-                h-14
-                w-14
+                h-10
+                w-10
                 items-center
                 justify-center
-                rounded-2xl
+                rounded-xl
                 border
                 border-cyan-400/20
                 bg-gradient-to-br
@@ -101,22 +113,43 @@ const AboutCards = () => {
                 to-violet-500/20
                 transition-all
                 duration-300
-                group-hover:scale-110
-                group-hover:rotate-6
+                group-hover:scale-105
+                group-hover:rotate-3
+                sm:h-11
+                sm:w-11
               "
             >
               <Icon
-                size={28}
-                className="text-cyan-400"
+                size={20}
+                className="text-cyan-400 sm:h-[21px] sm:w-[21px]"
               />
             </div>
 
             {/* Content */}
-            <h3 className="mt-6 text-xl font-bold text-white">
+
+            <h3
+              className="
+                mt-3
+                text-[15px]
+                font-bold
+                leading-tight
+                text-white
+                sm:text-base
+              "
+            >
               {card.title}
             </h3>
 
-            <p className="mt-4 text-sm leading-7 text-slate-400">
+            <p
+              className="
+                mt-2
+                text-[11px]
+                leading-5
+                text-slate-400
+                sm:text-xs
+                sm:leading-5
+              "
+            >
               {card.description}
             </p>
           </motion.div>

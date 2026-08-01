@@ -2,44 +2,49 @@ import { useEffect, useState } from "react";
 import { useFormik } from "formik";
 import * as Yup from "yup";
 
-import { Upload, Code2, Palette, Sparkles, Rocket } from "lucide-react";
+import { Code2, Palette, Rocket, Layers } from "lucide-react";
 
 const validationSchema = Yup.object({
   name: Yup.string().required("Skill name is required"),
 
   category: Yup.string().required("Category is required"),
 
+  icon: Yup.string().required("Icon is required"),
+
   level: Yup.number().min(0).max(100).required("Skill level is required"),
+
+  order: Yup.number().required("Display order is required"),
 });
 
 const inputClass = `
 w-full
-h-11
-px-4
+
+h-10
+
+px-3
 
 rounded-xl
 
 bg-white/5
 
 border
+
 border-white/10
 
 text-white
+
+text-sm
 
 outline-none
 
 placeholder:text-gray-500
 
-focus:border-cyan-400
-
-focus:ring-2
-
-focus:ring-cyan-400/20
+focus:border-blue-500
 
 transition
 `;
 
-const SkillForm = ({ skill, onSubmit }) => {
+const SkillForm = ({ loading, skill, onSubmit }) => {
   const [preview, setPreview] = useState("");
 
   const formik = useFormik({
@@ -47,36 +52,18 @@ const SkillForm = ({ skill, onSubmit }) => {
 
     initialValues: {
       name: skill?.name || "",
-
       category: skill?.category || "",
-
-      level: skill?.level || 0,
-
-      color: skill?.color || "#22d3ee",
-
-      order: skill?.order || 1,
-
-      isPublished: skill?.isPublished || false,
-
-      icon: null,
+      icon: skill?.icon || "",
+      level: skill?.level ?? 80,
+      color: skill?.color || "#3B82F6",
+      order: skill?.order ?? 1,
+      isPublished: skill?.isPublished ?? true,
     },
 
     validationSchema,
 
     onSubmit: (values) => {
-      const formData = new FormData();
-
-      Object.entries(values).forEach(([key, value]) => {
-        if (key === "icon") {
-          if (value) {
-            formData.append("icon", value);
-          }
-        } else {
-          formData.append(key, value);
-        }
-      });
-
-      onSubmit(formData);
+      onSubmit(values);
     },
   });
 
@@ -84,8 +71,8 @@ const SkillForm = ({ skill, onSubmit }) => {
     setPreview(skill?.icon?.url || "");
   }, [skill]);
 
-  const handleIconChange = (e) => {
-    const file = e.target.files?.[0];
+  const imageChange = (e) => {
+    const file = e.target.files[0];
 
     if (!file) return;
 
@@ -98,71 +85,142 @@ const SkillForm = ({ skill, onSubmit }) => {
     <form
       onSubmit={formik.handleSubmit}
       className="
-space-y-5
-pb-4
-"
+  space-y-3
+  "
     >
       {/* BASIC INFO */}
 
       <div
         className="
 grid
+
 md:grid-cols-2
-gap-4
+
+gap-3
 "
       >
         <div>
-          <label className="text-sm text-gray-300">Skill Name</label>
+          <label
+            className="
+block
 
-          <div className="relative mt-2">
+mb-1
+
+text-xs
+
+text-gray-300
+"
+          >
+            Skill Name
+          </label>
+
+          <div className="relative">
             <Code2
-              size={17}
+              size={16}
               className="
 absolute
+
 left-3
-top-3
-text-cyan-400
+
+top-2.5
+
+text-blue-400
 "
             />
 
             <input
               name="name"
-              placeholder="React"
               value={formik.values.name}
               onChange={formik.handleChange}
-              className="
-pl-10
+              placeholder="React"
+              className={`
+pl-9
 ${inputClass}
-"
+`}
             />
           </div>
         </div>
 
         <div>
-          <label className="text-sm text-gray-300">Category</label>
+          <div className="relative">
+            <div>
+              <label
+                className="
+      block
+      mb-1
+      text-xs
+      text-gray-300
+    "
+              >
+                Category
+              </label>
 
-          <select
-            name="category"
-            value={formik.values.category}
-            onChange={formik.handleChange}
-            className={`
-${inputClass}
-mt-2
-bg-[#0b1220]
-`}
-          >
-            <option value="">Select Category</option>
+              <div className="relative">
+                <Layers
+                  size={16}
+                  className="
+        absolute
+        left-3
+        top-2.5
+        text-blue-400
+        pointer-events-none
+      "
+                />
 
-            <option>Frontend</option>
+                <select
+                  name="category"
+                  value={formik.values.category}
+                  onChange={formik.handleChange}
+                  className={`
+        ${inputClass}
+        pl-9
+        appearance-none
+        bg-[#0F172A]
+        text-white
+      `}
+                >
+                  <option value="" className="bg-[#0F172A] text-white">
+                    Select Category
+                  </option>
 
-            <option>Backend</option>
+                  <option value="Frontend" className="bg-[#0F172A] text-white">
+                    Frontend
+                  </option>
 
-            <option>Database</option>
+                  <option value="Backend" className="bg-[#0F172A] text-white">
+                    Backend
+                  </option>
 
-            <option>DevOps</option>
+                  <option value="Database" className="bg-[#0F172A] text-white">
+                    Database
+                  </option>
 
-            <option>Tools</option>
-          </select>
+                  <option
+                    value="Programming"
+                    className="bg-[#0F172A] text-white"
+                  >
+                    Programming
+                  </option>
+
+                  <option value="DevOps" className="bg-[#0F172A] text-white">
+                    DevOps
+                  </option>
+
+                  <option value="AI" className="bg-[#0F172A] text-white">
+                    AI
+                  </option>
+
+                  <option value="Tools" className="bg-[#0F172A] text-white">
+                    Tools
+                  </option>
+
+                  <option value="Other" className="bg-[#0F172A] text-white">
+                    Other
+                  </option>
+                </select>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -170,37 +228,64 @@ bg-[#0b1220]
 
       <div
         className="
-rounded-2xl
+rounded-xl
+
 border
+
 border-white/10
+
 bg-white/5
-p-4
+
+p-3
 "
       >
         <div
           className="
 flex
+
+items-center
+
 justify-between
-mb-3
+
+mb-2
 "
         >
-          <label className="text-sm text-gray-300">Skill Level</label>
+          <label
+            className="
+text-xs
 
-          <span className="text-cyan-400 font-bold">
+text-gray-300
+"
+          >
+            Skill Level
+          </label>
+
+          <span
+            className="
+text-sm
+
+font-semibold
+
+text-blue-400
+"
+          >
             {formik.values.level}%
           </span>
         </div>
 
         <input
           type="range"
-          name="level"
           min="0"
           max="100"
+          name="level"
           value={formik.values.level}
           onChange={formik.handleChange}
           className="
 w-full
-accent-cyan-400
+
+accent-blue-500
+
+cursor-pointer
 "
         />
       </div>
@@ -210,22 +295,42 @@ accent-cyan-400
       <div
         className="
 grid
+
 md:grid-cols-2
-gap-4
+
+gap-3
 "
       >
         <div>
-          <label className="text-sm text-gray-300">Theme Color</label>
+          <label
+            className="
+block
+
+mb-1
+
+text-xs
+
+text-gray-300
+"
+          >
+            Theme Color
+          </label>
 
           <div
             className="
 flex
+
 items-center
+
 gap-3
-mt-2
 "
           >
-            <Palette size={18} className="text-purple-400" />
+            <Palette
+              size={16}
+              className="
+text-purple-400
+"
+            />
 
             <input
               type="color"
@@ -233,10 +338,14 @@ mt-2
               value={formik.values.color}
               onChange={formik.handleChange}
               className="
-w-12
-h-11
+w-10
+
+h-10
+
 rounded-lg
+
 bg-transparent
+
 cursor-pointer
 "
             />
@@ -251,83 +360,165 @@ cursor-pointer
         </div>
 
         <div>
-          <label className="text-sm text-gray-300">Display Order</label>
+          <label
+            className="
+block
+
+mb-1
+
+text-xs
+
+text-gray-300
+"
+          >
+            Display Order
+          </label>
 
           <input
             type="number"
             name="order"
             value={formik.values.order}
             onChange={formik.handleChange}
-            className={`
-${inputClass}
-mt-2
-`}
+            className={inputClass}
           />
         </div>
       </div>
 
-      {/* ICON UPLOAD */}
+      {/* Icons */}
 
-      <div
-        className="
-rounded-2xl
-border
-border-white/10
-bg-white/5
-p-4
-"
-      >
-        <div
-          className="
-flex
-items-center
-gap-2
-text-white
-mb-3
-"
-        >
-          <Sparkles size={18} className="text-yellow-400" />
-          Skill Icon
-        </div>
-
+      <div>
         <label
           className="
-flex
-items-center
-justify-center
-h-28
-rounded-xl
-border
-border-dashed
-border-white/20
-cursor-pointer
-hover:bg-white/5
-transition
-"
+      block
+      mb-1
+      text-xs
+      text-gray-300
+    "
         >
-          <Upload className="text-cyan-400" />
-
-          <input
-            type="file"
-            hidden
-            accept="image/*"
-            onChange={handleIconChange}
-          />
+          React Icon
         </label>
 
-        {preview && (
-          <img
-            src={preview}
-            className="
-mt-4
-w-20
-h-20
-rounded-xl
-object-contain
-bg-white/5
-p-2
-"
-          />
+        <select
+          name="icon"
+          value={formik.values.icon}
+          onChange={formik.handleChange}
+          className={`
+        ${inputClass}
+        pl-9
+        appearance-none
+        bg-[#0F172A]
+        text-white
+      `}
+        >
+          <option value="" className="bg-[#0F172A] text-white">
+            Select Icon
+          </option>
+
+          <option value="FaReact" className="bg-[#0F172A] text-white">
+            React
+          </option>
+
+          <option value="SiJavascript" className="bg-[#0F172A] text-white">
+            JavaScript
+          </option>
+
+          <option value="FaNodeJs" className="bg-[#0F172A] text-white">
+            Node.js
+          </option>
+
+          <option value="SiExpress" className="bg-[#0F172A] text-white">
+            Express
+          </option>
+
+          <option value="SiMongodb" className="bg-[#0F172A] text-white">
+            MongoDB
+          </option>
+
+          <option value="SiMysql" className="bg-[#0F172A] text-white">
+            MySQL
+          </option>
+
+          <option value="SiTailwindcss" className="bg-[#0F172A] text-white">
+            Tailwind CSS
+          </option>
+
+          <option value="FaGitAlt" className="bg-[#0F172A] text-white">
+            Git
+          </option>
+
+          <option value="FaGithub" className="bg-[#0F172A] text-white">
+            GitHub
+          </option>
+
+          <option value="FaHtml5" className="bg-[#0F172A] text-white">
+            HTML5
+          </option>
+
+          <option value="FaCss3Alt" className="bg-[#0F172A] text-white">
+            CSS3
+          </option>
+
+          <option value="SiPostman" className="bg-[#0F172A] text-white">
+            Postman
+          </option>
+
+          <option value="SiTypescript" className="bg-[#0F172A] text-white">
+            TypeScript
+          </option>
+
+          <option value="FaDocker" className="bg-[#0F172A] text-white">
+            Docker
+          </option>
+
+          <option value="SiRedux" className="bg-[#0F172A] text-white">
+            Redux
+          </option>
+
+          <option value="SiNextdotjs" className="bg-[#0F172A] text-white">
+            Next.js
+          </option>
+
+          <option value="SiVite" className="bg-[#0F172A] text-white">
+            Vite
+          </option>
+          <option value="SiLinux" className="bg-[#0F172A] text-white">
+            Linux
+          </option>
+
+          <option value="FaDocker" className="bg-[#0F172A] text-white">
+            Docker
+          </option>
+
+          <option value="SiKubernetes" className="bg-[#0F172A] text-white">
+            Kubernetes
+          </option>
+
+          <option
+            value="SiAmazonwebservices"
+            className="bg-[#0F172A] text-white"
+          >
+            AWS
+          </option>
+
+          <option value="SiGooglecloud" className="bg-[#0F172A] text-white">
+            Cloud
+          </option>
+
+          <option value="SiGithubactions" className="bg-[#0F172A] text-white">
+            CI/CD
+          </option>
+
+          <option value="SiTypescript" className="bg-[#0F172A] text-white">
+            TypeScript
+          </option>
+
+          <option value="TbTopologyStar3" className="bg-[#0F172A] text-white">
+            System Design
+          </option>
+        </select>
+
+        {formik.errors.icon && formik.touched.icon && (
+          <p className="mt-1 text-xs text-red-400">{formik.errors.icon}</p>
         )}
       </div>
 
@@ -336,24 +527,36 @@ p-2
       <label
         className="
 flex
+
 items-center
+
 justify-between
-p-4
+
+p-3
+
 rounded-xl
-border
-border-white/10
+
 bg-white/5
+
+border
+
+border-white/10
+
 text-white
+
+text-sm
 "
       >
         <div
           className="
 flex
+
 items-center
+
 gap-2
 "
         >
-          <Rocket size={18} className="text-green-400" />
+          <Rocket size={15} className="text-green-400" />
           Publish Skill
         </div>
 
@@ -365,24 +568,42 @@ gap-2
         />
       </label>
 
+      {/* BUTTON */}
+
       <button
+        disabled={loading}
         type="submit"
         className="
 w-full
-h-12
+
+h-10
+
+mt-2
+
 rounded-xl
+
 bg-gradient-to-r
+
 from-blue-600
-via-cyan-500
-to-purple-600
+
+via-purple-600
+
+to-cyan-600
+
 text-white
+
+text-sm
+
 font-semibold
-hover:scale-[1.02]
-active:scale-95
+
 transition
+
+hover:scale-[1.02]
+
+disabled:opacity-50
 "
       >
-        {skill ? "Update Skill" : "Create Skill"}
+        {loading ? "Saving..." : skill ? "Update Skill" : "Create Skill"}
       </button>
     </form>
   );

@@ -1,44 +1,99 @@
-import { motion } from "framer-motion";
-import { Send, Sparkles } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import {
+  LoaderCircle,
+  Send,
+  Sparkles,
+} from "lucide-react";
+import { useState } from "react";
+
+import { createContact } from "@/api/contact.api";
 
 const ContactForm = () => {
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    message: "",
+  });
+
+  const [success, setSuccess] = useState("");
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    setLoading(true);
+    setSuccess("");
+    setError("");
+
+    try {
+      const response = await createContact(formData);
+
+      if (response.success) {
+        setSuccess(response.message);
+
+        setFormData({
+          name: "",
+          email: "",
+          message: "",
+        });
+
+        setTimeout(() => {
+          setSuccess("");
+        }, 3000);
+      }
+    } catch (error) {
+      if (error.response) {
+        setError(
+          error.response.data.message ||
+            "Something went wrong"
+        );
+      } else if (error.request) {
+        setError(
+          "Server is not reachable. Please try again later."
+        );
+      } else {
+        setError(error.message);
+      }
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const inputClass = `
+    w-full
+    rounded-lg
+    border
+    border-white/10
+    bg-white/[0.04]
+    px-4
+    py-2.5
+    text-sm
+    text-white
+    placeholder:text-slate-500
+    outline-none
+    transition-all
+    duration-300
+    focus:border-cyan-400/40
+    focus:ring-2
+    focus:ring-cyan-400/10
+  `;
+
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-        x: 50,
-      }}
-      whileInView={{
-        opacity: 1,
-        x: 0,
-      }}
-      viewport={{
-        once: true,
-        amount: 0.3,
-      }}
-      transition={{
-        duration: 0.8,
-      }}
+      initial={{ opacity: 0, x: 30 }}
+      whileInView={{ opacity: 1, x: 0 }}
+      viewport={{ once: true }}
+      transition={{ duration: 0.7 }}
       className="
-        group
         relative
         overflow-hidden
-        rounded-3xl
+        rounded-xl
         border
         border-white/10
-        bg-gradient-to-br
-        from-white/[0.08]
-        via-white/[0.05]
-        to-transparent
-        p-6
-        backdrop-blur-2xl
-        transition-all
-        duration-500
-
-        hover:border-cyan-400/30
-        hover:shadow-[0_0_60px_rgba(34,211,238,0.12)]
-
-        sm:p-8
+        bg-white/[0.05]
+        p-5
+        backdrop-blur-xl
       "
     >
       {/* Glow */}
@@ -46,66 +101,47 @@ const ContactForm = () => {
       <div
         className="
           absolute
-          -right-20
-          -top-20
-          h-60
-          w-60
+          -right-16
+          -top-16
+          h-40
+          w-40
           rounded-full
-          bg-cyan-400/20
-          blur-[100px]
-        "
-      />
-
-      {/* Shine */}
-
-      <div
-        className="
-          pointer-events-none
-          absolute
-          -left-40
-          top-0
-          h-full
-          w-32
-          rotate-12
-          bg-white/10
-          blur-xl
-          transition-all
-          duration-700
-          group-hover:left-[120%]
+          bg-cyan-400/10
+          blur-[80px]
         "
       />
 
       <div className="relative">
+
         {/* Header */}
 
-        <div className="mb-8">
-          <div
-            className="
-              mb-4
-              flex
-              items-center
-              gap-2
-              text-cyan-300
-            "
-          >
-            <Sparkles size={18} />
+        <div className="mb-5">
+
+          <div className="mb-2 flex items-center gap-2">
+
+            <Sparkles
+              size={16}
+              className="text-cyan-300"
+            />
 
             <span
               className="
-                text-xs
+                text-[11px]
                 font-semibold
                 uppercase
-                tracking-widest
+                tracking-[0.18em]
+                text-cyan-300
               "
             >
               Contact Me
             </span>
+
           </div>
 
           <h3
             className="
-              text-3xl
-              font-black
+              text-xl
+              font-bold
               text-white
             "
           >
@@ -114,248 +150,199 @@ const ContactForm = () => {
 
           <p
             className="
-              mt-3
+              mt-2
               text-sm
-              leading-7
+              leading-6
               text-slate-400
             "
           >
-            Have an idea or opportunity? Let's create something amazing
-            together.
+            Have an idea or project?
+            Let's build something awesome together.
           </p>
+
         </div>
 
-        <form className="space-y-6">
-          {/* Name */}
+        {/* Success */}
 
-          <div>
-            <label
+        <AnimatePresence>
+          {success && (
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: -8,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                y: -8,
+              }}
               className="
-                mb-2
-                block
+                mb-4
+                rounded-lg
+                border
+                border-emerald-400/20
+                bg-emerald-400/10
+                p-3
                 text-sm
-                font-medium
-                text-slate-300
+                text-emerald-300
               "
             >
+              ✨ {success}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Error */}
+
+        <AnimatePresence>
+          {error && (
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: -8,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
+              exit={{
+                opacity: 0,
+                y: -8,
+              }}
+              className="
+                mb-4
+                rounded-lg
+                border
+                border-red-400/20
+                bg-red-400/10
+                p-3
+                text-sm
+                text-red-300
+              "
+            >
+              ⚠️ {error}
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+        {/* Form */}
+
+        <form
+          onSubmit={handleSubmit}
+          className="space-y-4"
+        >
+
+          <div>
+
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               Name
             </label>
 
             <input
               type="text"
+              required
               placeholder="Enter your name"
-              className="
-                w-full
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/5
-
-                px-5
-                py-3.5
-
-                text-white
-
-                placeholder:text-slate-500
-
-                outline-none
-
-                transition-all
-                duration-300
-
-                focus:border-cyan-400/50
-                focus:bg-cyan-400/5
-                focus:ring-4
-                focus:ring-cyan-400/10
-              "
+              value={formData.name}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  name: e.target.value,
+                })
+              }
+              className={inputClass}
             />
+
           </div>
 
-          {/* Email */}
-
           <div>
-            <label
-              className="
-                mb-2
-                block
-                text-sm
-                font-medium
-                text-slate-300
-              "
-            >
+
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               Email
             </label>
 
             <input
               type="email"
+              required
               placeholder="you@example.com"
-              className="
-                w-full
-                rounded-2xl
-                border
-                border-white/10
-                bg-white/5
-
-                px-5
-                py-3.5
-
-                text-white
-
-                placeholder:text-slate-500
-
-                outline-none
-
-                transition-all
-                duration-300
-
-                focus:border-cyan-400/50
-                focus:bg-cyan-400/5
-                focus:ring-4
-                focus:ring-cyan-400/10
-              "
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  email: e.target.value,
+                })
+              }
+              className={inputClass}
             />
+
           </div>
 
-          {/* Message */}
-
           <div>
-            <label
-              className="
-                mb-2
-                block
-                text-sm
-                font-medium
-                text-slate-300
-              "
-            >
+
+            <label className="mb-1 block text-sm font-medium text-slate-300">
               Message
             </label>
 
             <textarea
-              rows="5"
+              rows={4}
+              required
               placeholder="Tell me about your project..."
-              className="
-                w-full
-
-                resize-none
-
-                rounded-2xl
-
-                border
-                border-white/10
-
-                bg-white/5
-
-                px-5
-                py-4
-
-                text-white
-
-                placeholder:text-slate-500
-
-                outline-none
-
-                transition-all
-                duration-300
-
-                focus:border-cyan-400/50
-
-                focus:bg-cyan-400/5
-
-                focus:ring-4
-
-                focus:ring-cyan-400/10
-              "
+              value={formData.message}
+              onChange={(e) =>
+                setFormData({
+                  ...formData,
+                  message: e.target.value,
+                })
+              }
+              className={`${inputClass} resize-none`}
             />
-          </div>
 
-          {/* Button */}
+          </div>
 
           <button
             type="submit"
+            disabled={loading}
             className="
-              group/button
-
-              relative
-
               flex
-
               w-full
-
               items-center
-
               justify-center
-
-              gap-3
-
-              overflow-hidden
-
-              rounded-2xl
-
+              gap-2
+              rounded-lg
               bg-gradient-to-r
-
               from-cyan-400
-
               to-blue-400
-
-
-              px-6
-
-              py-4
-
-
-              font-bold
-
+              py-2.5
+              text-sm
+              font-semibold
               text-slate-900
-
-
               transition-all
-
               duration-300
-
-
-              hover:-translate-y-1
-
-
-              hover:shadow-[0_0_40px_rgba(34,211,238,0.45)]
-
-
-              active:scale-95
-
+              hover:-translate-y-0.5
+              hover:shadow-[0_0_25px_rgba(34,211,238,0.35)]
+              disabled:opacity-70
             "
           >
-            <span
-              className="
-                absolute
-                inset-0
-                -translate-x-full
-                bg-gradient-to-r
-                from-transparent
-                via-white/40
-                to-transparent
-                transition-transform
-                duration-700
-                group-hover/button:translate-x-full
-              "
-            />
-
-            <span className="relative">Send Message</span>
-
-            <Send
-              size={18}
-              className="
-                relative
-
-                transition-transform
-
-                duration-300
-
-                group-hover/button:translate-x-1
-
-              "
-            />
+            {loading ? (
+              <>
+                <LoaderCircle
+                  size={16}
+                  className="animate-spin"
+                />
+                Sending...
+              </>
+            ) : (
+              <>
+                Send Message
+                <Send size={16} />
+              </>
+            )}
           </button>
+
         </form>
+
       </div>
     </motion.div>
   );

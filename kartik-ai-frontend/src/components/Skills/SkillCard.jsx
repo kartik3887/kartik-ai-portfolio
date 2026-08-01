@@ -1,101 +1,55 @@
 import { motion } from "framer-motion";
+import { getSkills } from "@/api/skill.api";
+import { useEffect, useState } from "react";
 
-import {
-  FaReact,
-  FaNodeJs,
-  FaGitAlt,
-  FaGithub,
-  FaHtml5,
-  FaCss3Alt,
-} from "react-icons/fa";
-
-import {
-  SiJavascript,
-  SiExpress,
-  SiMongodb,
-  SiTailwindcss,
-  SiMysql,
-  SiPostman,
-} from "react-icons/si";
-
-const technologies = [
-  {
-    name: "React",
-    icon: FaReact,
-    color: "text-cyan-400",
-  },
-  {
-    name: "JavaScript",
-    icon: SiJavascript,
-    color: "text-yellow-400",
-  },
-  {
-    name: "Node.js",
-    icon: FaNodeJs,
-    color: "text-green-500",
-  },
-  {
-    name: "Express",
-    icon: SiExpress,
-    color: "text-slate-300",
-  },
-  {
-    name: "MongoDB",
-    icon: SiMongodb,
-    color: "text-green-400",
-  },
-  {
-    name: "MySQL",
-    icon: SiMysql,
-    color: "text-blue-400",
-  },
-  {
-    name: "Tailwind CSS",
-    icon: SiTailwindcss,
-    color: "text-sky-400",
-  },
-  {
-    name: "Git",
-    icon: FaGitAlt,
-    color: "text-orange-500",
-  },
-  {
-    name: "GitHub",
-    icon: FaGithub,
-    color: "text-white",
-  },
-  {
-    name: "HTML5",
-    icon: FaHtml5,
-    color: "text-orange-600",
-  },
-  {
-    name: "CSS3",
-    icon: FaCss3Alt,
-    color: "text-blue-500",
-  },
-  {
-    name: "Postman",
-    icon: SiPostman,
-    color: "text-orange-400",
-  },
-];
+import { skillIcons } from "./skillIcons";
 
 const SkillCards = () => {
+  const [skills, setSkills] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchSkills = async () => {
+      try {
+        const response = await getSkills();
+        setSkills(response.data);
+      } catch (error) {
+        console.error("Failed to load skills:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchSkills();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="py-10 text-center text-slate-400">Loading skills...</div>
+    );
+  }
   return (
-    <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 xl:grid-cols-6">
+    <div
+      className="
+        grid
+        gap-3
 
-      {technologies.map((tech, index) => {
+        sm:grid-cols-2
+        sm:gap-4
 
-        const Icon = tech.icon;
+        lg:grid-cols-4
+        xl:grid-cols-6
+      "
+    >
+      {skills.map((skill, index) => {
+        const Icon = skillIcons[skill.icon];
 
         return (
-
           <motion.div
-            key={tech.name}
+            key={skill.name}
             initial={{
               opacity: 0,
-              y: 30,
+              y: 20,
             }}
             whileInView={{
               opacity: 1,
@@ -103,10 +57,11 @@ const SkillCards = () => {
             }}
             viewport={{
               once: true,
+              margin: "-50px",
             }}
             transition={{
-              duration: 0.5,
-              delay: index * 0.08,
+              duration: 0.4,
+              delay: index * 0.06,
             }}
             className="
               group
@@ -116,20 +71,23 @@ const SkillCards = () => {
               border
               border-white/10
               bg-white/5
-              p-6
+              p-4
               backdrop-blur-xl
               transition-all
-              duration-500
-              hover:-translate-y-2
+              duration-400
+
+              hover:-translate-y-1.5
               hover:border-cyan-400/40
-              hover:shadow-[0_0_35px_rgba(34,211,238,0.15)]
+              hover:shadow-[0_0_30px_rgba(34,211,238,0.12)]
+
+              sm:p-5
             "
           >
-
             {/* Glow */}
 
             <div
               className="
+                pointer-events-none
                 absolute
                 inset-0
                 -z-10
@@ -151,11 +109,11 @@ const SkillCards = () => {
             <div
               className="
                 flex
-                h-16
-                w-16
+                h-12
+                w-12
                 items-center
                 justify-center
-                rounded-2xl
+                rounded-xl
                 border
                 border-white/10
                 bg-gradient-to-br
@@ -163,35 +121,41 @@ const SkillCards = () => {
                 to-violet-500/10
                 transition-all
                 duration-300
-                group-hover:scale-110
-                group-hover:rotate-6
+
+                group-hover:scale-105
+                group-hover:rotate-3
+
+                sm:h-14
+                sm:w-14
               "
             >
-              <Icon
-                className={`${tech.color} text-4xl`}
-              />
+              {Icon && (
+                <Icon
+                  className="text-3xl sm:text-4xl"
+                  style={{ color: skill.color }}
+                />
+              )}
             </div>
 
             {/* Name */}
 
             <h3
               className="
-                mt-5
+                mt-3
                 text-center
-                text-base
+                text-sm
                 font-semibold
                 text-white
+
+                sm:mt-4
+                sm:text-base
               "
             >
-              {tech.name}
+              {skill.name}
             </h3>
-
           </motion.div>
-
         );
-
       })}
-
     </div>
   );
 };

@@ -23,6 +23,8 @@ export const createContact = async (req, res) => {
   }
 };
 
+
+
 export const getAllContacts = async (req, res) => {
   try {
     const contacts = await Contact.find().sort({ createdAt: -1 });

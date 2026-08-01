@@ -12,26 +12,21 @@ const Hero = () => {
       id="home"
       aria-labelledby="hero-heading"
       className="
+        px-4
         relative
-        min-h-screen
+        h-screen
+        w-full
         overflow-hidden
         bg-[#050816]
       "
     >
       {/* ================= Soft Aurora ================= */}
 
-      <div
-        className="
-          absolute
-          inset-0
-          z-0
-          opacity-80
-        "
-      >
+      <div className="absolute inset-0 z-0 opacity-55">
         <SoftAurora
           speed={0.5}
           scale={1.8}
-          brightness={1.5}
+          brightness={1.2}
           color1="#22d3ee"
           color2="#8b5cf6"
           noiseFrequency={2}
@@ -48,18 +43,11 @@ const Hero = () => {
 
       {/* ================= AI Background ================= */}
 
-      <div
-        className="
-          absolute
-          inset-0
-          z-0
-          opacity-40
-        "
-      >
+      <div className="absolute inset-0 z-0 opacity-20">
         <AIBackground />
       </div>
 
-      {/* ================= Glow Layers ================= */}
+      {/* ================= Ambient Glow ================= */}
 
       <div
         className="
@@ -68,12 +56,16 @@ const Hero = () => {
           left-1/2
           top-20
           z-0
-          h-96
-          w-96
+          h-56
+          w-56
           -translate-x-1/2
           rounded-full
-          bg-cyan-400/20
-          blur-[120px]
+          bg-cyan-400/15
+          blur-[80px]
+          sm:h-72
+          sm:w-72
+          lg:h-64
+          lg:w-64
         "
       />
 
@@ -81,14 +73,18 @@ const Hero = () => {
         className="
           pointer-events-none
           absolute
-          right-0
+          right-[-4rem]
           top-1/3
           z-0
-          h-80
-          w-80
+          h-56
+          w-56
           rounded-full
-          bg-violet-500/20
-          blur-[140px]
+          bg-violet-500/15
+          blur-[80px]
+          sm:right-[-2rem]
+          sm:h-64
+          sm:w-64
+          lg:right-0
         "
       />
 
@@ -96,13 +92,14 @@ const Hero = () => {
 
       <div
         className="
+          pointer-events-none
           absolute
           inset-0
           z-10
           bg-gradient-to-b
-          from-[#050816]/40
-          via-[#050816]/60
-          to-[#050816]
+          from-slate-950/20
+          via-slate-950/50
+          to-slate-950
         "
       />
 
@@ -113,76 +110,78 @@ const Hero = () => {
           relative
           z-20
           mx-auto
+          flex
+          h-full
+          w-full
           max-w-7xl
-          px-6
-          sm:px-8
-          lg:px-10
-          pt-28
-          sm:pt-32
-          lg:pt-36
-          pb-20
+          items-center
+          px-4
+          pt-20
+          pb-4
+          sm:px-6
+          sm:pt-20
+          sm:pb-5
+          lg:px-8
+          lg:pt-16
+          lg:pb-4
+          xl:px-10
         "
       >
         <div
           className="
             grid
-            min-h-[calc(100svh-9rem)]
+            h-full
+            w-full
             grid-cols-1
             items-center
-            gap-12
-            lg:grid-cols-[1.1fr_0.9fr]
-            lg:gap-10
+            lg:grid-cols-[1.05fr_0.95fr]
+            lg:gap-6
+            xl:gap-8
           "
         >
-          {/* ================= AI Assistant ================= */}
-
-          <div
-            className="
-              order-1
-
-              flex
-              w-full
-              items-center
-              justify-center
-
-              mb-8
-
-              lg:order-2
-              lg:mb-0
-              lg:justify-end
-            "
-          >
-            <AIAssistant />
-          </div>
-
-          {/* ================= Hero Content ================= */}
+          {/* ================= LEFT CONTENT ================= */}
 
           <div
             className="
               order-2
-
               mx-auto
               flex
+              w-full
               max-w-2xl
               flex-col
               justify-center
-
+              py-2
               text-center
-
               lg:order-1
               lg:mx-0
+              lg:py-0
               lg:text-left
             "
           >
             <HeroContent />
 
-            <div className="mt-8">
-              <HeroButtons />
-            </div>
+            <HeroButtons />
 
-            <div className="mt-10">
-              <HeroStats />
-            </div>
+            <HeroStats />
+          </div>
+
+          {/* ================= AI ASSISTANT ================= */}
+
+          <div
+            className="
+              order-1
+              flex
+              w-full
+              items-center
+              justify-center
+              py-2
+              lg:order-2
+              lg:h-full
+              lg:justify-end
+              lg:py-0
+            "
+          >
+            <AIAssistant />
           </div>
         </div>
       </div>
@@ -196,11 +195,13 @@ const Hero = () => {
           bottom-0
           left-0
           z-20
-          h-40
+          h-8
           w-full
           bg-gradient-to-t
-          from-[#050816]
+          from-slate-950
           to-transparent
+          sm:h-10
+          lg:h-10
         "
       />
     </section>

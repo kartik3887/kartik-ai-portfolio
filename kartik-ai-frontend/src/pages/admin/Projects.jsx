@@ -60,6 +60,7 @@ const Projects = () => {
       space-y-5
 
       overflow-hidden
+      
       "
     >
       {/* Background Glow */}
@@ -131,6 +132,13 @@ const Projects = () => {
 
         border
         border-white/10
+         hover:border-blue-500/40
+
+      hover:shadow-lg
+
+      hover:shadow-blue-500/10
+
+      transition
         "
       >
         <div
