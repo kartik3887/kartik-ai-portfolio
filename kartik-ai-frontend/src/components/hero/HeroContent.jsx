@@ -1,6 +1,6 @@
 import { HERO_DATA } from "./heroData";
 
-const HeroContent = () => {
+const HeroContent = ({ profile }) => {
   return (
     <div
       className="
@@ -90,7 +90,7 @@ const HeroContent = () => {
           xl:text-[4rem]
         "
       >
-        {HERO_DATA.name}
+        {profile?.fullName}
       </h1>
 
       {/* ================= Role ================= */}
@@ -121,7 +121,7 @@ const HeroContent = () => {
           lg:text-[1.6rem]
         "
       >
-        {HERO_DATA.role}
+        {profile?.role}
       </h2>
 
       {/* ================= Description ================= */}
@@ -152,7 +152,7 @@ const HeroContent = () => {
           xl:leading-6
         "
       >
-        {HERO_DATA.description}
+        {profile?.heroDescription}
       </p>
     </div>
   );

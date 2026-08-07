@@ -1,7 +1,34 @@
 import { HERO_DATA } from "./heroData";
 import { ArrowRight, Download } from "lucide-react";
+import { getResume } from "@/api/resume.api";
+import { useEffect, useState } from "react";
 
 const HeroButtons = () => {
+  const [resumeUrl, setResumeUrl] = useState([]);
+
+  useEffect(() => {
+    const fetchResume = async () => {
+      console.log("Fetching Resume...");
+
+      try {
+        const response = await getResume();
+
+        console.log("API Response:", response);
+
+        setResumeUrl(response.resume.fileUrl);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchResume();
+  }, []);
+
+  const handleDownloadResume = () => {
+    if (!resumeUrl) return;
+
+    window.open(resumeUrl, "_blank");
+  };
   return (
     <div
       className="
@@ -21,7 +48,7 @@ const HeroButtons = () => {
       {/* ================= Primary CTA ================= */}
 
       <a
-        href={HERO_DATA.buttons.primary.href}
+        href="#projects"
         className="
           group
 
@@ -75,10 +102,9 @@ const HeroButtons = () => {
 
       {/* ================= Secondary CTA ================= */}
 
-      <a
-        href={HERO_DATA.buttons.secondary.href}
-        target="_blank"
-        rel="noopener noreferrer"
+      <button
+        type="button"
+        onClick={handleDownloadResume}
         className="
           group
 
@@ -129,7 +155,7 @@ const HeroButtons = () => {
         />
 
         <span>{HERO_DATA.buttons.secondary.text}</span>
-      </a>
+      </button>
     </div>
   );
 };

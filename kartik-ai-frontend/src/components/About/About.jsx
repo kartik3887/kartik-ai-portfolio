@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import AboutCards from "./AboutCards";
 import TechStack from "./TechStack";
-import profile from "/profile.jpeg";
+import useProfile from "@/hooks/useProfile";
 
 import { FolderGit2, Code2, MonitorSmartphone } from "lucide-react";
 import { getResume } from "@/api/resume.api";
@@ -26,6 +26,7 @@ const stats = [
 
 const About = () => {
   const [resumeUrl, setResumeUrl] = useState([]);
+   const { profile, loading, error } = useProfile();
   useEffect(() => {
     const fetchResume = async () => {
       console.log("Fetching Resume...");
@@ -43,12 +44,12 @@ const About = () => {
 
     fetchResume();
   }, []);
-  
-  const handleDownloadResume = () => {
-  if (!resumeUrl) return;
 
-  window.open(resumeUrl, "_blank");
-};
+  const handleDownloadResume = () => {
+    if (!resumeUrl) return;
+
+    window.open(resumeUrl, "_blank");
+  };
   return (
     <section
       id="about"
@@ -264,7 +265,7 @@ const About = () => {
                 "
               >
                 <img
-                  src={profile}
+                  src={profile?.profileImage?.fileUrl}
                   alt="Kartik Deore"
                   className="
                     h-[260px]
@@ -361,7 +362,7 @@ const About = () => {
                 sm:text-3xl
               "
             >
-              Kartik Deore
+             {profile?.fullName}
             </h3>
 
             {/* Roles */}
@@ -416,8 +417,7 @@ const About = () => {
                   sm:leading-6
                 "
               >
-                I build responsive, scalable and AI-powered web applications
-                using React, Node.js, Express and MongoDB.
+              {profile?.aboutDescription}
               </p>
 
               <p
@@ -429,8 +429,7 @@ const About = () => {
                   sm:leading-6
                 "
               >
-                I enjoy solving real-world problems through clean UI, modern
-                architecture and continuous learning.
+             
               </p>
             </div>
 

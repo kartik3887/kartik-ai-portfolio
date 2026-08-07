@@ -34,7 +34,7 @@ export const HERO_DATA = {
   stats: [
 
     {
-      value: "20+",
+      value: "2+",
       label: "Projects Built",
     },
 

@@ -1,21 +1,12 @@
 import { User, BriefcaseBusiness, Sparkles } from "lucide-react";
-
 import { motion } from "framer-motion";
 
-const PersonalInfoSection = () => {
+const PersonalInfoSection = ({ formik }) => {
   return (
     <motion.div
-      initial={{
-        opacity: 0,
-        y: 20,
-      }}
-      animate={{
-        opacity: 1,
-        y: 0,
-      }}
-      transition={{
-        duration: 0.5,
-      }}
+      initial={{ opacity: 0, y: 20 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5 }}
       className="
         group
         relative
@@ -26,13 +17,10 @@ const PersonalInfoSection = () => {
         bg-white/5
         p-5
         backdrop-blur-xl
-
         sm:p-6
-
       "
     >
       {/* Glow */}
-
       <div
         className="
           absolute
@@ -47,7 +35,6 @@ const PersonalInfoSection = () => {
       />
 
       {/* Header */}
-
       <div
         className="
           relative
@@ -78,7 +65,6 @@ const PersonalInfoSection = () => {
               text-base
               font-semibold
               text-white
-
               sm:text-lg
             "
           >
@@ -89,7 +75,6 @@ const PersonalInfoSection = () => {
             className="
               text-xs
               text-gray-400
-
               sm:text-sm
             "
           >
@@ -99,36 +84,60 @@ const PersonalInfoSection = () => {
       </div>
 
       {/* Form */}
+      <div className="relative space-y-4">
 
-      <div
-        className="
-          relative
-          space-y-4
-        "
-      >
         <InputField
           icon={<User size={17} />}
           label="Full Name"
           placeholder="Enter your name"
+          name="fullName"
+          value={formik.values.fullName}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.errors.fullName}
+          touched={formik.touched.fullName}
         />
 
         <InputField
           icon={<BriefcaseBusiness size={17} />}
           label="Professional Title"
           placeholder="Full Stack Developer"
+          name="title"
+          value={formik.values.title}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.errors.title}
+          touched={formik.touched.title}
         />
 
         <InputArea
           icon={<Sparkles size={17} />}
           label="Subtitle"
           placeholder="Building scalable AI applications..."
+          name="subtitle"
+          value={formik.values.subtitle}
+          onChange={formik.handleChange}
+          onBlur={formik.handleBlur}
+          error={formik.errors.subtitle}
+          touched={formik.touched.subtitle}
         />
+
       </div>
     </motion.div>
   );
 };
 
-const InputField = ({ icon, label, placeholder }) => {
+const InputField = ({
+  icon,
+  label,
+  placeholder,
+  name,
+  value,
+  onChange,
+  onBlur,
+  error,
+  touched,
+}) => {
   return (
     <div>
       <label
@@ -137,19 +146,14 @@ const InputField = ({ icon, label, placeholder }) => {
           block
           text-xs
           text-gray-400
-
           sm:text-sm
         "
       >
         {label}
       </label>
 
-      <div
-        className="
-          relative
-          group/input
-        "
-      >
+      <div className="relative group/input">
+
         <div
           className="
             absolute
@@ -163,46 +167,54 @@ const InputField = ({ icon, label, placeholder }) => {
         </div>
 
         <input
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
           placeholder={placeholder}
-          className="
+          className={`
             h-11
             w-full
-
             rounded-xl
-
-            border
-            border-white/10
-
             bg-slate-900/50
-
             pl-10
             pr-4
-
             text-sm
-
             text-white
-
             outline-none
-
             transition-all
-
             duration-300
 
-            focus:border-cyan-400/60
-
-            focus:ring-2
-
-            focus:ring-cyan-400/20
-
-            hover:border-white/20
-          "
+            ${
+              touched && error
+                ? "border border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                : "border border-white/10 hover:border-white/20 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+            }
+          `}
         />
+
+        {touched && error && (
+          <p className="mt-2 text-sm text-red-400">
+            {error}
+          </p>
+        )}
+
       </div>
     </div>
   );
 };
 
-const InputArea = ({ icon, label, placeholder }) => {
+const InputArea = ({
+  icon,
+  label,
+  placeholder,
+  name,
+  value,
+  onChange,
+  onBlur,
+  error,
+  touched,
+}) => {
   return (
     <div>
       <label
@@ -211,18 +223,13 @@ const InputArea = ({ icon, label, placeholder }) => {
           block
           text-xs
           text-gray-400
-
           sm:text-sm
         "
       >
         {label}
       </label>
 
-      <div
-        className="
-        relative
-      "
-      >
+      <div className="relative">
         <div
           className="
             absolute
@@ -236,38 +243,38 @@ const InputArea = ({ icon, label, placeholder }) => {
 
         <textarea
           rows={3}
+          name={name}
+          value={value}
+          onChange={onChange}
+          onBlur={onBlur}
           placeholder={placeholder}
-          className="
+          className={`
             w-full
-
             resize-none
-
             rounded-xl
-
-            border
-            border-white/10
-
             bg-slate-900/50
-
             py-3
             pl-10
             pr-4
-
             text-sm
-
             text-white
-
             outline-none
-
             transition-all
+            duration-300
 
-            focus:border-cyan-400/60
-
-            focus:ring-2
-
-            focus:ring-cyan-400/20
-          "
+            ${
+              touched && error
+                ? "border border-red-500 focus:border-red-500 focus:ring-2 focus:ring-red-500/20"
+                : "border border-white/10 hover:border-white/20 focus:border-cyan-400/60 focus:ring-2 focus:ring-cyan-400/20"
+            }
+          `}
         />
+
+        {touched && error && (
+          <p className="mt-2 text-sm text-red-400">
+            {error}
+          </p>
+        )}
       </div>
     </div>
   );

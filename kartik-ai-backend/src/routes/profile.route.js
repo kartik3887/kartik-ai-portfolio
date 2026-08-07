@@ -1,14 +1,34 @@
-import express from "express"
-import { createProfileController, getProfileController, updateProfileController } from "../controllers/profile.controller.js"
-import uploadFile from "../middleware/upload.middleware.js"
+import express from "express";
+import {
+    createProfileController,
+    getProfileController,
+    updateProfileController,
+} from "../controllers/profile.controller.js";
 
-import { authMiddleware } from "../middleware/auth.middleware.js"
-import { adminMiddleware } from "../middleware/admin.middleware.js"
+import uploadFile from "../middleware/upload.middleware.js";
+import { authMiddleware } from "../middleware/auth.middleware.js";
+import { adminMiddleware } from "../middleware/admin.middleware.js";
 
+const router = express.Router();
 
-const router = express.Router()
+// Public
+router.get("/", getProfileController);
 
-router.get('/', getProfileController)
-router.post('/', uploadFile.single("profileImage"), createProfileController)
-router.patch('/', uploadFile.single("profileImage"), updateProfileController)
-export default router
+// Admin Only
+router.post(
+    "/",
+    authMiddleware,
+    adminMiddleware,
+    uploadFile.single("profileImage"),
+    createProfileController
+);
+
+router.patch(
+    "/",
+    authMiddleware,
+    adminMiddleware,
+    uploadFile.single("profileImage"),
+    updateProfileController
+);
+
+export default router;

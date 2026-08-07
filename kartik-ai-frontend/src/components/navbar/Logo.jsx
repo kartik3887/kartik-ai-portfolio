@@ -1,10 +1,13 @@
+import { motion } from "framer-motion";
 import logo from "@/assets/logo.png";
 
 const Logo = () => {
   return (
-    <a
+    <motion.a
       href="#home"
       aria-label="Kartik.AI Home"
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.98 }}
       className="
         group
         flex
@@ -13,71 +16,119 @@ const Logo = () => {
         select-none
       "
     >
-      {/* Logo Icon */}
+      {/* Logo Container */}
 
       <div
         className="
           relative
 
           flex
-          h-11
-          w-11
+          h-12
+          w-12
 
           items-center
           justify-center
 
           overflow-hidden
 
-          rounded-xl
+          rounded-2xl
 
           border
-          border-white/10
+          border-cyan-400/20
 
-          bg-white/[0.05]
+          bg-slate-900/70
 
-          backdrop-blur-xl
+          backdrop-blur-2xl
 
           transition-all
-          duration-300
+          duration-500
 
-          group-hover:scale-105
-          group-hover:border-cyan-400/40
-          group-hover:shadow-[0_0_20px_rgba(34,211,238,0.20)]
+          group-hover:border-cyan-400/50
+          group-hover:shadow-[0_0_30px_rgba(34,211,238,0.30)]
         "
       >
-        {/* Ambient Glow */}
+        {/* Animated Glow */}
 
         <div
           className="
-            pointer-events-none
-
             absolute
-            inset-0
+            -inset-5
 
-            rounded-xl
+            rounded-full
 
-            bg-gradient-to-br
+            bg-gradient-to-r
+            from-cyan-400/25
+            via-sky-400/10
+            to-violet-500/25
 
-            from-cyan-400/15
-            via-transparent
-            to-violet-500/15
+            blur-xl
 
             opacity-0
 
-            blur-lg
-
-            transition-opacity
-            duration-300
+            transition-all
+            duration-500
 
             group-hover:opacity-100
           "
         />
 
+        {/* Rotating Gradient */}
+
+        <motion.div
+          animate={{
+            rotate: 360,
+          }}
+          transition={{
+            duration: 12,
+            repeat: Infinity,
+            ease: "linear",
+          }}
+          className="
+            absolute
+            inset-0
+
+            rounded-2xl
+
+            bg-gradient-to-tr
+            from-cyan-400/10
+            via-transparent
+            to-violet-500/15
+          "
+        />
+
+        {/* Shine */}
+
+        <span
+          className="
+            absolute
+            inset-0
+
+            -translate-x-full
+
+            bg-gradient-to-r
+            from-transparent
+            via-white/20
+            to-transparent
+
+            group-hover:translate-x-full
+
+            transition-transform
+            duration-1000
+          "
+        />
+
         {/* Logo */}
 
-        <img
+        <motion.img
           src={logo}
           alt="Kartik.AI Logo"
+          whileHover={{
+            rotate: 8,
+            scale: 1.08,
+          }}
+          transition={{
+            duration: 0.35,
+          }}
           className="
             relative
             z-10
@@ -86,12 +137,6 @@ const Logo = () => {
             w-9
 
             object-contain
-
-            transition-transform
-            duration-300
-
-            group-hover:scale-105
-            group-hover:rotate-3
           "
         />
       </div>
@@ -102,22 +147,39 @@ const Logo = () => {
         className="
           flex
           flex-col
-
           leading-none
         "
       >
         <h1
           className="
-            text-[17px]
+            text-[18px]
             font-black
-
-            tracking-[-0.02em]
+            tracking-tight
 
             text-white
+
+            transition-all
+            duration-300
+
+            group-hover:text-cyan-100
           "
         >
           Kartik
-          <span className="text-cyan-400">.AI</span>
+          <span
+            className="
+              ml-0.5
+
+              bg-gradient-to-r
+              from-cyan-300
+              via-sky-400
+              to-violet-400
+
+              bg-clip-text
+              text-transparent
+            "
+          >
+            .AI
+          </span>
         </h1>
 
         <span
@@ -126,19 +188,24 @@ const Logo = () => {
 
             text-[9px]
 
-            font-medium
+            font-semibold
 
             uppercase
 
-            tracking-[0.32em]
+            tracking-[0.35em]
 
-            text-cyan-300/80
+            text-slate-400
+
+            transition-colors
+            duration-300
+
+            group-hover:text-cyan-300
           "
         >
-          AI FULL STACK
+          AI • FULL STACK
         </span>
       </div>
-    </a>
+    </motion.a>
   );
 };
 

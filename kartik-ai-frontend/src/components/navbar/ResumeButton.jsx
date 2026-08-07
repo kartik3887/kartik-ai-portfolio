@@ -1,18 +1,15 @@
 import { ArrowUpRight } from "lucide-react";
 import { getResume } from "@/api/resume.api";
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 
 const ResumeButton = () => {
-  const [resumeUrl, setResumeUrl] = useState([]);
+  const [resumeUrl, setResumeUrl] = useState("");
+
   useEffect(() => {
     const fetchResume = async () => {
-      console.log("Fetching Resume...");
-
       try {
         const response = await getResume();
-
-        console.log("API Response:", response);
-
         setResumeUrl(response.resume.fileUrl);
       } catch (err) {
         console.error(err);
@@ -23,18 +20,24 @@ const ResumeButton = () => {
   }, []);
 
   return (
-    <a
+    <motion.a
       href={resumeUrl}
       target="_blank"
       rel="noopener noreferrer"
       aria-label="Open Resume"
+      whileHover={{
+        y: -3,
+        scale: 1.02,
+      }}
+      whileTap={{
+        scale: 0.97,
+      }}
       className="
         group
         relative
-
         inline-flex
         items-center
-        gap-2
+        gap-3
 
         overflow-hidden
 
@@ -43,36 +46,45 @@ const ResumeButton = () => {
         border
         border-cyan-400/25
 
-        bg-gradient-to-r
-        from-cyan-400/10
-        via-white/[0.04]
-        to-violet-500/10
+        bg-slate-900/70
+        backdrop-blur-2xl
 
-        px-5
-        py-2.5
+        px-6
+        py-3
 
-        text-sm
+        text-[15px]
         font-semibold
         text-white
 
-        backdrop-blur-xl
-
         transition-all
-        duration-300
+        duration-500
 
-        hover:-translate-y-0.5
-        hover:border-cyan-400/45
-        hover:shadow-[0_0_20px_rgba(34,211,238,0.18)]
-
-        active:scale-95
+        hover:border-cyan-400/50
+        hover:shadow-[0_0_35px_rgba(34,211,238,0.25)]
       "
     >
-      {/* Shine */}
-
+      {/* Animated Background */}
       <span
         className="
-          pointer-events-none
+          absolute
+          inset-0
 
+          opacity-0
+          group-hover:opacity-100
+
+          transition-all
+          duration-500
+
+          bg-gradient-to-r
+          from-cyan-500/10
+          via-sky-400/15
+          to-violet-500/10
+        "
+      />
+
+      {/* Shine */}
+      <span
+        className="
           absolute
           inset-0
 
@@ -83,33 +95,96 @@ const ResumeButton = () => {
           via-white/20
           to-transparent
 
-          transition-transform
-          duration-700
-
           group-hover:translate-x-full
+
+          transition-transform
+          duration-1000
         "
       />
 
+      {/* Pulse Dot */}
+      <span className="relative z-10 flex h-2.5 w-2.5">
+        <span
+          className="
+            absolute
+            inline-flex
+            h-full
+            w-full
+            rounded-full
+            bg-cyan-400
+            opacity-75
+            animate-ping
+          "
+        />
+        <span
+          className="
+            relative
+            inline-flex
+            h-2.5
+            w-2.5
+            rounded-full
+            bg-cyan-400
+          "
+        />
+      </span>
+
       {/* Text */}
-
-      <span className="relative z-10">Resume</span>
-
-      {/* Icon */}
-
-      <ArrowUpRight
-        size={16}
+      <span
         className="
           relative
           z-10
 
-          transition-transform
+          transition-colors
           duration-300
 
-          group-hover:translate-x-0.5
-          group-hover:-translate-y-0.5
+          group-hover:text-cyan-300
+        "
+      >
+        Resume
+      </span>
+
+      {/* Icon */}
+      <ArrowUpRight
+        size={18}
+        className="
+          relative
+          z-10
+
+          transition-all
+          duration-300
+
+          group-hover:translate-x-1
+          group-hover:-translate-y-1
+          group-hover:rotate-12
         "
       />
-    </a>
+
+      {/* Bottom Glow */}
+      <span
+        className="
+          absolute
+          bottom-0
+          left-1/2
+
+          h-[2px]
+          w-0
+
+          -translate-x-1/2
+
+          rounded-full
+
+          bg-gradient-to-r
+          from-cyan-400
+          via-sky-400
+          to-violet-500
+
+          transition-all
+          duration-500
+
+          group-hover:w-[75%]
+        "
+      />
+    </motion.a>
   );
 };
 

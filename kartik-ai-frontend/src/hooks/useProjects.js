@@ -85,7 +85,7 @@ const useProjects = () => {
       return true;
 
 
-    } catch(error){
+    } catch (error) {
 
       toast.error(
         error.response?.data?.message ||
@@ -128,7 +128,7 @@ const useProjects = () => {
       return true;
 
 
-    } catch(error){
+    } catch (error) {
 
       toast.error(
         error.response?.data?.message ||
@@ -163,12 +163,18 @@ const useProjects = () => {
       await fetchProjects();
 
 
-    } catch(error){
+      return true;
+
+
+    } catch (error) {
 
       toast.error(
         error.response?.data?.message ||
         "Delete failed"
       );
+
+
+      return false;
 
     }
 
@@ -180,16 +186,16 @@ const useProjects = () => {
   // Publish
   // =========================
 
-  const togglePublish = async(id)=>{
+  const togglePublish = async (id) => {
 
-    try{
+    try {
 
       await togglePublishApi(id);
 
       await fetchProjects();
 
 
-    }catch(error){
+    } catch (error) {
 
       toast.error(
         "Publish update failed"
@@ -205,16 +211,16 @@ const useProjects = () => {
   // Featured
   // =========================
 
-  const toggleFeatured = async(id)=>{
+  const toggleFeatured = async (id) => {
 
-    try{
+    try {
 
       await toggleFeaturedApi(id);
 
       await fetchProjects();
 
 
-    }catch(error){
+    } catch (error) {
 
       toast.error(
         "Featured update failed"

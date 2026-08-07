@@ -1,8 +1,9 @@
 import Profile from "../models/Profile.js";
 import { uploadFile, replaceFile } from "./cloudinary.service.js";
 
-export const createProfile = async (data, file) => {
+// ================= CREATE PROFILE =================
 
+export const createProfile = async (data, file) => {
     const existingProfile = await Profile.findOne();
 
     if (existingProfile) {
@@ -24,23 +25,26 @@ export const createProfile = async (data, file) => {
     } = data;
 
     if (!fullName || !title || !email) {
-        throw new Error("Required profile fields missing");
+        throw new Error("Required profile fields are missing");
     }
 
     let profileImage = {
         publicId: "",
-        fileUrl: ""
-    }
+        fileUrl: "",
+    };
 
     if (file) {
+        try {
+            const result = await uploadFile(file, "kartik-ai/profile");
 
-        const result = await uploadFile(file, "kartik-ai/profile");
-        console.log(result)
-
-        profileImage = {
-            publicId: result.public_id,
-            fileUrl: result.url,
-        };
+            profileImage = {
+                publicId: result.public_id,
+                fileUrl: result.url,
+            };
+        } catch (error) {
+            console.error(error);
+            throw new Error("Failed to upload profile image");
+        }
     }
 
     const profile = await Profile.create({
@@ -61,22 +65,25 @@ export const createProfile = async (data, file) => {
     return profile;
 };
 
+// ================= GET PROFILE =================
 
-export const getProfile = async (data, file) => {
-    const profile = await Profile.findOne({})
+export const getProfile = async () => {
+    const profile = await Profile.findOne({});
 
     if (!profile) {
-        throw new Error("Profile not found")
+        throw new Error("Profile not found");
     }
 
     return profile;
-}
+};
 
+// ================= UPDATE PROFILE =================
 
 export const updateProfile = async (data, file) => {
-    const profile = await Profile.findOne({})
+    const profile = await Profile.findOne({});
+
     if (!profile) {
-        throw new Error("Profile not found")
+        throw new Error("Profile not found");
     }
 
     const {
@@ -92,37 +99,42 @@ export const updateProfile = async (data, file) => {
         availableForWork,
         socials,
     } = data;
-    console.log(data)
 
-    try {
-        if (file) {
-            const result = await replaceFile(profile.profileImage.publicId, file, "kartik-ai/profile");
+    // Replace profile image if new file uploaded
+    if (file) {
+        try {
+            const result = await replaceFile(
+                profile.profileImage?.publicId,
+                file,
+                "kartik-ai/profile"
+            );
 
             profile.profileImage = {
                 publicId: result.public_id,
-                fileUrl: result.url
-            }
+                fileUrl: result.url,
+            };
+        } catch (error) {
+            console.error(error);
+            throw new Error("Failed to replace profile image");
         }
-    } catch (error) {
-        console.error(error)
-        throw new Error("Failed to replace profile image")
     }
 
-
-    profile.fullName = fullName ?? profile.fullName;
-    profile.title = title ?? profile.title;
-    profile.subtitle = subtitle ?? profile.subtitle;
-    profile.heroDescription = heroDescription ?? profile.heroDescription;
-    profile.aboutDescription = aboutDescription ?? profile.aboutDescription;
-    profile.roles = roles ?? profile.roles;
-    profile.location = location ?? profile.location;
-    profile.email = email ?? profile.email;
-    profile.phone = phone ?? profile.phone;
-    profile.availableForWork =
-        availableForWork ?? profile.availableForWork;
-    profile.socials = socials ?? profile.socials;
+    Object.assign(profile, {
+        fullName: fullName ?? profile.fullName,
+        title: title ?? profile.title,
+        subtitle: subtitle ?? profile.subtitle,
+        heroDescription: heroDescription ?? profile.heroDescription,
+        aboutDescription: aboutDescription ?? profile.aboutDescription,
+        roles: roles ?? profile.roles,
+        location: location ?? profile.location,
+        email: email ?? profile.email,
+        phone: phone ?? profile.phone,
+        availableForWork:
+            availableForWork ?? profile.availableForWork,
+        socials: socials ?? profile.socials,
+    });
 
     await profile.save();
 
     return profile;
-}
+};

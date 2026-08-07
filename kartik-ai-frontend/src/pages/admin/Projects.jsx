@@ -469,7 +469,10 @@ const Projects = () => {
                 "
             >
               <button
-                onClick={() => setDeleteModal(false)}
+                onClick={() => {
+                  setDeleteModal(false);
+                  setProjectToDelete(null);
+                }}
                 className="
                   flex-1
 

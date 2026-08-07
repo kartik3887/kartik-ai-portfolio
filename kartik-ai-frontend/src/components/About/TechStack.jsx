@@ -27,7 +27,7 @@ import {
   // The correct Simple Icons name for AWS
 } from "react-icons/si";
 
-import { TbCode, TbBrandVisualStudio, TbTopologyStar3 } from "react-icons/tb";
+import { TbCode, TbBrandVisualStudio,  } from "react-icons/tb";
 
 const technologies = [
   // Roles
@@ -37,7 +37,7 @@ const technologies = [
     color: "text-cyan-400",
   },
   {
-    name: "Software Developer",
+    name: "Software Engineer",
     icon: TbCode,
     color: "text-violet-400",
   },

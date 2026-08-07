@@ -5,7 +5,7 @@ const StatsCard = ({ title, value = 0, icon: Icon }) => {
     <motion.div
       initial={{
         opacity: 0,
-        y: 10,
+        y: 8,
       }}
       animate={{
         opacity: 1,
@@ -13,6 +13,7 @@ const StatsCard = ({ title, value = 0, icon: Icon }) => {
       }}
       whileHover={{
         y: -2,
+        scale: 1.02,
       }}
       transition={{
         duration: 0.25,
@@ -21,16 +22,24 @@ const StatsCard = ({ title, value = 0, icon: Icon }) => {
         group
         relative
         overflow-hidden
-        rounded-2xl
+
+        rounded-xl
+
         border
         border-white/10
-        bg-white/5
-        p-4
+
+        bg-white/[0.04]
+
+        px-3
+        py-3
+
         backdrop-blur-xl
-        transition
-        hover:border-blue-500/40
-        hover:shadow-lg
-        hover:shadow-blue-500/10
+
+        transition-all
+        duration-300
+
+        hover:border-cyan-400/30
+        hover:shadow-[0_8px_25px_rgba(34,211,238,0.12)]
       "
     >
       {/* Glow */}
@@ -38,34 +47,47 @@ const StatsCard = ({ title, value = 0, icon: Icon }) => {
       <div
         className="
           absolute
-          -right-10
-          -top-10
-          h-24
-          w-24
+          -right-8
+          -top-8
+
+          h-16
+          w-16
+
           rounded-full
-          bg-blue-500/15
-          blur-3xl
-          transition
-          group-hover:bg-blue-500/30
+
+          bg-cyan-400/15
+
+          blur-2xl
+
+          transition-all
+          duration-300
+
+          group-hover:bg-cyan-400/25
         "
       />
 
       <div
         className="
           relative
+
           flex
           items-center
           justify-between
+
           gap-3
         "
       >
         <div>
           <p
             className="
-              text-[11px]
+              text-[10px]
+              font-medium
+
               uppercase
-              tracking-wider
-              text-gray-400
+
+              tracking-[0.18em]
+
+              text-slate-400
             "
           >
             {title}
@@ -74,10 +96,13 @@ const StatsCard = ({ title, value = 0, icon: Icon }) => {
           <h2
             className="
               mt-1
-              text-2xl
+
+              text-xl
               font-bold
+
               text-white
-              md:text-3xl
+
+              md:text-2xl
             "
           >
             {value}
@@ -85,29 +110,44 @@ const StatsCard = ({ title, value = 0, icon: Icon }) => {
 
           <p
             className="
-              mt-1
-              text-[11px]
-              text-blue-400
+              mt-0.5
+
+              text-[10px]
+
+              text-cyan-400/80
             "
           >
-            AI Portfolio Data
+            AI Portfolio
           </p>
         </div>
 
         {Icon && (
           <div
             className="
-              rounded-xl
+              flex
+              h-10
+              w-10
+
+              items-center
+              justify-center
+
+              rounded-lg
+
               border
-              border-blue-500/20
-              bg-blue-500/20
-              p-2
-              text-blue-400
-              transition
+              border-cyan-400/20
+
+              bg-cyan-400/10
+
+              text-cyan-400
+
+              transition-all
+              duration-300
+
               group-hover:scale-110
+              group-hover:rotate-6
             "
           >
-            <Icon size={18} />
+            <Icon size={16} />
           </div>
         )}
       </div>

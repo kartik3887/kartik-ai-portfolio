@@ -5,8 +5,26 @@ import AIAssistant from "../AI/AIAssistant";
 
 import SoftAurora from "@/components/ui/SoftAurora";
 import AIBackground from "../Background/AIBackground";
+import useProfile from "@/hooks/useProfile";
 
 const Hero = () => {
+  const { profile, loading, error } = useProfile();
+
+  if (loading) {
+    return (
+      <section className="flex h-screen items-center justify-center bg-[#050816]">
+        Loading...
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="flex h-screen items-center justify-center bg-[#050816] text-red-400">
+        Failed to load profile
+      </section>
+    );
+  }
   return (
     <section
       id="home"
@@ -158,7 +176,7 @@ const Hero = () => {
               lg:text-left
             "
           >
-            <HeroContent />
+            <HeroContent profile={profile} />
 
             <HeroButtons />
 

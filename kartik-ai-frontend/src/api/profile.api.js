@@ -5,6 +5,11 @@ export const getAdminProfile = async () => {
     return response.data;
 }
 
+export const createProfile = async (data) =>{
+    const response = await api.post('/profile', data);
+    return response.data;
+}
+
 export const updateAdminProfile = async (data) => {
     const response = await api.patch('/profile', data);
     return response.data;

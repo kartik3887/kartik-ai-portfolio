@@ -1,3 +1,4 @@
+import { motion } from "framer-motion";
 import { navLinks } from "./navLinks";
 
 const NavLinksMenu = ({ mobile = false, onLinkClick }) => {
@@ -8,73 +9,156 @@ const NavLinksMenu = ({ mobile = false, onLinkClick }) => {
           ? `
             flex
             flex-col
-            gap-6
+            gap-5
+            w-full
           `
           : `
             hidden
-            items-center
-            gap-8
             lg:flex
+            items-center
+            gap-3
           `
       }
     >
-      {navLinks.map((link) => (
-        <a
+      {navLinks.map((link, index) => (
+        <motion.a
           key={link.id}
           href={link.href}
           aria-label={link.label}
           onClick={onLinkClick}
+          initial={{
+            opacity: 0,
+            y: -10,
+          }}
+          animate={{
+            opacity: 1,
+            y: 0,
+          }}
+          transition={{
+            delay: index * 0.08,
+            duration: 0.35,
+          }}
+          whileHover={{
+            y: -2,
+          }}
+          whileTap={{
+            scale: 0.97,
+          }}
           className={`
             group
             relative
-            whitespace-nowrap
-
-            font-medium
-            transition-all
-            duration-300
+            overflow-hidden
 
             ${
               mobile
                 ? `
-                  text-lg
-                  text-slate-300
-                  hover:translate-x-1
-                `
+                    px-4
+                    py-3
+                    rounded-xl
+                    text-lg
+                  `
                 : `
-                  text-[15px]
-                  text-slate-300
-                `
+                    px-4
+                    py-2.5
+                    rounded-full
+                    text-[15px]
+                  `
             }
 
+            font-medium
+            tracking-wide
+            text-slate-300
+
+            transition-all
+            duration-300
+
             hover:text-cyan-300
+            hover:bg-cyan-500/10
+            hover:border-cyan-400/20
+            hover:shadow-[0_0_20px_rgba(34,211,238,0.18)]
+
+            border
+            border-transparent
+
+            backdrop-blur-sm
           `}
         >
-          {link.label}
-
+          {/* Glow Background */}
           <span
-            className={`
+            className="
               absolute
-              left-0
-              ${mobile ? "-bottom-1" : "-bottom-2"}
+              inset-0
+              opacity-0
+              group-hover:opacity-100
+              transition-all
+              duration-500
+              bg-gradient-to-r
+              from-cyan-500/5
+              via-sky-400/10
+              to-violet-500/5
+            "
+          />
+
+          {/* Text */}
+          <span
+            className="
+              relative
+              z-10
+              transition-all
+              duration-300
+              group-hover:text-cyan-300
+            "
+          >
+            {link.label}
+          </span>
+
+          {/* Bottom Animated Line */}
+          <span
+            className="
+              absolute
+              left-1/2
+              -translate-x-1/2
+              bottom-0
 
               h-[2px]
               w-0
 
               rounded-full
 
-              ${
-                mobile
-                  ? "bg-cyan-400"
-                  : "bg-gradient-to-r from-cyan-400 to-violet-500"
-              }
+              bg-gradient-to-r
+              from-cyan-400
+              via-sky-400
+              to-violet-500
 
               transition-all
               duration-300
 
-              group-hover:w-full
-            `}
+              group-hover:w-[70%]
+            "
           />
-        </a>
+
+          {/* Top Glow */}
+          <span
+            className="
+              absolute
+              top-0
+              left-1/2
+              -translate-x-1/2
+
+              h-px
+              w-0
+
+              bg-cyan-300
+
+              opacity-80
+
+              transition-all
+              duration-300
+
+              group-hover:w-10
+            "
+          />
+        </motion.a>
       ))}
     </nav>
   );

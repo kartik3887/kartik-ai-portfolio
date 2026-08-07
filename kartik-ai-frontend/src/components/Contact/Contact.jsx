@@ -1,8 +1,27 @@
 import { motion } from "framer-motion";
 import ContactInfo from "./ContactInfo";
 import ContactForm from "./ContactForm";
+import useProfile from "@/hooks/useProfile";
 
 const Contact = () => {
+  const { profile, loading, error } = useProfile();
+
+  if (loading) {
+    return (
+      <section className="flex h-screen items-center justify-center bg-[#050816]">
+        Loading...
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="flex h-screen items-center justify-center bg-[#050816] text-red-400">
+        Failed to load profile
+      </section>
+    );
+  }
+
   return (
     <section
       id="contact"
@@ -18,7 +37,6 @@ const Contact = () => {
     >
       {/* Background */}
       <div className="absolute inset-0 -z-10 overflow-hidden">
-
         {/* Grid */}
         <div
           className="
@@ -148,9 +166,8 @@ const Contact = () => {
               sm:text-base
             "
           >
-            Have a project idea, collaboration opportunity,
-            or just want to discuss technology? Feel free to
-            connect with me.
+            Have a project idea, collaboration opportunity, or just want to
+            discuss technology? Feel free to connect with me.
           </p>
         </motion.div>
 
@@ -167,7 +184,7 @@ const Contact = () => {
             lg:gap-8
           "
         >
-          <ContactInfo />
+          <ContactInfo profile={profile} />
 
           <ContactForm />
         </div>
